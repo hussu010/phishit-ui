@@ -5,7 +5,6 @@ import {
   Dialog as DialogShadCn,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -16,16 +15,20 @@ import { Label } from "@/components/ui/label";
 type FieldErrors = {
   [key: string]: string;
 };
-type DialogType = "PHONE_NUMBER" | "OTP" | "NONE";
 
-import { sendOtp } from "@/lib/auth";
+import { sendOtp, verifyOtp } from "@/lib/auth";
 
 function LoginDialog() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [otpCode, setOtpCode] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [otpDialogfieldErrors, setOtpDialogfieldErrors] = useState<{
+    [key: string]: string;
+  }>({});
   const [fieldErrors, setFieldErrors] = useState<{ [key: string]: string }>({});
-  const [openDialog, setOpenDialog] = useState<DialogType>("PHONE_NUMBER");
+
+  const [openPhoneDialog, setOpenPhoneDialog] = useState(false);
+  const [openOtpDialog, setOpenOtpDialog] = useState(false);
 
   const handleRequestOTPSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,7 +37,8 @@ function LoginDialog() {
 
     try {
       await sendOtp(phoneNumber);
-      setOpenDialog("OTP");
+      setOpenPhoneDialog(false);
+      setOpenOtpDialog(true);
     } catch (errors) {
       if (errors instanceof Error) {
         const err = errors as Error;
@@ -57,11 +61,17 @@ function LoginDialog() {
   const handleVerifyOTPSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
-    setFieldErrors({});
+    setOtpDialogfieldErrors({});
 
     try {
-      await sendOtp(phoneNumber);
-      setOpenDialog("OTP");
+      const { accessToken, refreshToken } = await verifyOtp(
+        phoneNumber,
+        otpCode
+      );
+
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+      setOpenOtpDialog(false);
     } catch (errors) {
       if (errors instanceof Error) {
         const err = errors as Error;
@@ -75,7 +85,7 @@ function LoginDialog() {
               dynamicErrors[key] = err[key];
             }
           }
-          setFieldErrors(dynamicErrors);
+          setOtpDialogfieldErrors(dynamicErrors);
         }
       }
     }
@@ -83,7 +93,7 @@ function LoginDialog() {
 
   return (
     <>
-      <DialogShadCn>
+      <DialogShadCn open={openPhoneDialog} onOpenChange={setOpenPhoneDialog}>
         <DialogTrigger>
           <div className="text-sm font-semibold leading-6 text-gray-900">
             Login
@@ -126,10 +136,7 @@ function LoginDialog() {
         </DialogContent>
       </DialogShadCn>
 
-      <DialogShadCn
-        open={openDialog === "OTP"}
-        onOpenChange={() => setOpenDialog("NONE")}
-      >
+      <DialogShadCn open={openOtpDialog} onOpenChange={setOpenOtpDialog}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Verify your phone!</DialogTitle>
@@ -148,9 +155,9 @@ function LoginDialog() {
                 onChange={(e) => setOtpCode(e.target.value)}
                 className="col-span-3"
               />
-              {fieldErrors.phoneNumber && (
+              {otpDialogfieldErrors.code && (
                 <div className="text-red-500 mt-2">
-                  {fieldErrors.phoneNumber}
+                  {otpDialogfieldErrors.code}
                 </div>
               )}
             </div>
