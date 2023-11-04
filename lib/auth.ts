@@ -66,3 +66,32 @@ export async function verifyOtp(phoneNumber: string, otp: string) {
   }
 }
 
+export const refreshAccessToken = async (refreshToken: string) => {
+  try {
+    const response = await fetch("/api/auth/refresh", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ refreshToken }),
+    });
+
+    const data = await response.json();
+    return data.accessToken;
+  } catch (error) {
+    console.error("Error refreshing access token", error);
+    throw error;
+  }
+};
+
+// Function to check if the access token is expired
+export const isAccessTokenExpired = (accessToken: string) => {
+  // Implement your logic to check if the access token is expired here
+  return false; // Replace with your actual logic
+};
+
+// Function to check if the refresh token is expired
+export const isRefreshTokenExpired = (refreshToken: string) => {
+  // Implement your logic to check if the refresh token is expired here
+  return false; // Replace with your actual logic
+};

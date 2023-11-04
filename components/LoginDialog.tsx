@@ -18,7 +18,11 @@ type FieldErrors = {
 
 import { sendOtp, verifyOtp } from "@/lib/auth";
 
-function LoginDialog() {
+function LoginDialog({
+  updateIsUserAuthenticated,
+}: {
+  updateIsUserAuthenticated: (isAuthenticated: boolean) => void;
+}) {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [otpCode, setOtpCode] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -72,6 +76,7 @@ function LoginDialog() {
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
       setOpenOtpDialog(false);
+      updateIsUserAuthenticated(true);
     } catch (errors) {
       if (errors instanceof Error) {
         const err = errors as Error;
