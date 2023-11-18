@@ -10,15 +10,17 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { logout } from "@/redux/features/auth-slice";
 
-export default function UserNav({
-  updateIsUserAuthenticated,
-}: {
-  updateIsUserAuthenticated: (isAuthenticated: boolean) => void;
-}) {
+import { useDispatch, useSelector } from "react-redux";
+
+export default function UserNav() {
+  const dispatch = useDispatch();
+
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
-    updateIsUserAuthenticated(false);
+    localStorage.removeItem("refreshToken");
+    dispatch(logout());
   };
 
   return (

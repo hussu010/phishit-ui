@@ -2,6 +2,7 @@
 
 import { Fragment, useEffect, useState } from "react";
 import { Dialog, Disclosure, Popover, Transition } from "@headlessui/react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   ArrowPathIcon,
   Bars3Icon,
@@ -19,6 +20,7 @@ import {
 
 import LoginDialog from "./LoginDialog";
 import UserNav from "./UserNav";
+import { RootState } from "@/redux/reducer";
 
 const products = [
   {
@@ -70,20 +72,8 @@ function classNames(...classes: (string | boolean)[]) {
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isUserAuthenticated, setIsUserAuthenticated] = useState(false);
 
-  const updateIsUserAuthenticated = (value: boolean) => {
-    setIsUserAuthenticated(value);
-  };
-
-  useEffect(() => {
-    const accessToken = localStorage.getItem("accessToken");
-    if (accessToken) {
-      setIsUserAuthenticated(true);
-    } else {
-      setIsUserAuthenticated(false);
-    }
-  }, []);
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
 
   return (
     <header className="bg-white">
@@ -183,13 +173,7 @@ export default function Navbar() {
           <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
             Company
           </a>
-          {isUserAuthenticated ? (
-            <UserNav updateIsUserAuthenticated={updateIsUserAuthenticated} />
-          ) : (
-            <LoginDialog
-              updateIsUserAuthenticated={updateIsUserAuthenticated}
-            />
-          )}
+          {isAuthenticated ? <UserNav /> : <LoginDialog />}
         </Popover.Group>
       </nav>
       <Dialog
@@ -269,15 +253,7 @@ export default function Navbar() {
                 </a>
               </div>
               <div className="py-6">
-                {isUserAuthenticated ? (
-                  <UserNav
-                    updateIsUserAuthenticated={updateIsUserAuthenticated}
-                  />
-                ) : (
-                  <LoginDialog
-                    updateIsUserAuthenticated={updateIsUserAuthenticated}
-                  />
-                )}
+                {isAuthenticated ? <UserNav /> : <LoginDialog />}
               </div>
             </div>
           </div>

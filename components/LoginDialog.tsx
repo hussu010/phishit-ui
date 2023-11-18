@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import { useDispatch, useSelector } from "react-redux";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog as DialogShadCn,
@@ -17,12 +19,9 @@ type FieldErrors = {
 };
 
 import { sendOtp, verifyOtp } from "@/lib/auth";
+import { loginSuccess } from "@/redux/features/auth-slice";
 
-function LoginDialog({
-  updateIsUserAuthenticated,
-}: {
-  updateIsUserAuthenticated: (isAuthenticated: boolean) => void;
-}) {
+function LoginDialog() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [otpCode, setOtpCode] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -33,6 +32,8 @@ function LoginDialog({
 
   const [openPhoneDialog, setOpenPhoneDialog] = useState(false);
   const [openOtpDialog, setOpenOtpDialog] = useState(false);
+
+  const dispatch = useDispatch();
 
   const handleRequestOTPSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -76,7 +77,12 @@ function LoginDialog({
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
       setOpenOtpDialog(false);
-      updateIsUserAuthenticated(true);
+      dispatch(
+        loginSuccess({
+          accessToken,
+          refreshToken,
+        })
+      );
     } catch (errors) {
       if (errors instanceof Error) {
         const err = errors as Error;
