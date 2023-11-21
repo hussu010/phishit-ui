@@ -68,7 +68,7 @@ export async function verifyOtp(phoneNumber: string, otp: string) {
 
 export const refreshAccessToken = async (refreshToken: string) => {
   try {
-    const response = await fetch("/api/auth/refresh", {
+    const response = await fetch("http://127.0.0.1:5000/api/auth/refresh", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -94,4 +94,17 @@ export const isAccessTokenExpired = (accessToken: string) => {
 export const isRefreshTokenExpired = (refreshToken: string) => {
   // Implement your logic to check if the refresh token is expired here
   return false; // Replace with your actual logic
+};
+
+export const getGoogleAuthUrl = async () => {
+  try {
+    const response = await fetch(
+      "http://127.0.0.1:5000/api/auth/o/google?redirect_uri=http://localhost:3000/auth/google/callback"
+    );
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error getting Google auth URL", error);
+    throw error;
+  }
 };

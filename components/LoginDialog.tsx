@@ -1,8 +1,13 @@
-import { useState } from "react";
+"use client";
 
+import { useState, useEffect } from "react";
+import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 
-import { Button } from "@/components/ui/button";
+import { Mail } from "lucide-react";
+
+import { Button, buttonVariants } from "@/components/ui/button";
+
 import {
   Dialog as DialogShadCn,
   DialogContent,
@@ -18,7 +23,7 @@ type FieldErrors = {
   [key: string]: string;
 };
 
-import { sendOtp, verifyOtp } from "@/lib/auth";
+import { sendOtp, verifyOtp, getGoogleAuthUrl } from "@/api/auth";
 import { loginSuccess } from "@/redux/features/auth-slice";
 
 function LoginDialog() {
@@ -32,8 +37,24 @@ function LoginDialog() {
 
   const [openPhoneDialog, setOpenPhoneDialog] = useState(false);
   const [openOtpDialog, setOpenOtpDialog] = useState(false);
+  const [googleAuthUrl, setGoogleAuthUrl] = useState<string>("");
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchGoogleAuthUrl = async () => {
+      try {
+        const { authorization_url } = await getGoogleAuthUrl();
+        setGoogleAuthUrl(authorization_url);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchGoogleAuthUrl();
+  }, []);
+
+  console.log(googleAuthUrl);
 
   const handleRequestOTPSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -140,9 +161,12 @@ function LoginDialog() {
           </form>
           <hr className="my-4" />
           <div className="text-center">
-            <DialogDescription>
-              <a href="#">Forgot password?</a>
-            </DialogDescription>
+            <Link
+              className={buttonVariants({ variant: "default" })}
+              href={googleAuthUrl}
+            >
+              <Mail className="mr-2 h-4 w-4" /> Login With Google
+            </Link>
           </div>
         </DialogContent>
       </DialogShadCn>
@@ -178,9 +202,12 @@ function LoginDialog() {
           </form>
           <hr className="my-4" />
           <div className="text-center">
-            <DialogDescription>
-              <a href="#">Forgot password?</a>
-            </DialogDescription>
+            <Link
+              className={buttonVariants({ variant: "default" })}
+              href={googleAuthUrl}
+            >
+              <Mail className="mr-2 h-4 w-4" /> Login With Google
+            </Link>
           </div>
         </DialogContent>
       </DialogShadCn>
