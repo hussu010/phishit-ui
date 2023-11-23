@@ -31,14 +31,22 @@ export async function sendOtp(phoneNumber: string) {
   }
 }
 
-export async function verifyOtp(phoneNumber: string, otp: string) {
+export const createJWT = async ({
+  code,
+  method,
+  phoneNumber,
+}: {
+  code: string;
+  method: string;
+  phoneNumber?: string;
+}) => {
   try {
     const response = await fetch("http://127.0.0.1:5000/api/auth/jwt/create", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ phoneNumber, code: otp }),
+      body: JSON.stringify({ phoneNumber, code, method }),
     });
 
     const data = await response.json();
@@ -64,7 +72,7 @@ export async function verifyOtp(phoneNumber: string, otp: string) {
     console.error("Error verifying OTP:", error);
     throw error;
   }
-}
+};
 
 export const refreshAccessToken = async (refreshToken: string) => {
   try {

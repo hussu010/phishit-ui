@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import { Mail } from "lucide-react";
 
@@ -11,7 +11,6 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Dialog as DialogShadCn,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -23,7 +22,7 @@ type FieldErrors = {
   [key: string]: string;
 };
 
-import { sendOtp, verifyOtp, getGoogleAuthUrl } from "@/api/auth";
+import { sendOtp, createJWT, getGoogleAuthUrl } from "@/api/auth";
 import { loginSuccess } from "@/redux/features/auth-slice";
 
 function LoginDialog() {
@@ -53,8 +52,6 @@ function LoginDialog() {
 
     fetchGoogleAuthUrl();
   }, []);
-
-  console.log(googleAuthUrl);
 
   const handleRequestOTPSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -90,10 +87,11 @@ function LoginDialog() {
     setOtpDialogfieldErrors({});
 
     try {
-      const { accessToken, refreshToken } = await verifyOtp(
+      const { accessToken, refreshToken } = await createJWT({
         phoneNumber,
-        otpCode
-      );
+        code: otpCode,
+        method: "phone",
+      });
 
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
