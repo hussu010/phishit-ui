@@ -1,6 +1,8 @@
+import { API_URL } from "@/config/constants";
+
 export async function sendOtp(phoneNumber: string) {
   try {
-    const response = await fetch("http://127.0.0.1:5000/api/auth/otp", {
+    const response = await fetch(`${API_URL}/api/auth/otp`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -41,7 +43,7 @@ export const createJWT = async ({
   phoneNumber?: string;
 }) => {
   try {
-    const response = await fetch("http://127.0.0.1:5000/api/auth/jwt/create", {
+    const response = await fetch(`${API_URL}/api/auth/jwt/create`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -76,7 +78,7 @@ export const createJWT = async ({
 
 export const refreshAccessToken = async (refreshToken: string) => {
   try {
-    const response = await fetch("http://127.0.0.1:5000/api/auth/refresh", {
+    const response = await fetch(`${API_URL}/api/auth/refresh`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -107,7 +109,7 @@ export const isRefreshTokenExpired = (refreshToken: string) => {
 export const getGoogleAuthUrl = async () => {
   try {
     const response = await fetch(
-      "http://127.0.0.1:5000/api/auth/o/google?redirect_uri=http://localhost:3000/auth/google/callback"
+      `${API_URL}/api/auth/o/google?redirect_uri=http://localhost:3000/auth/google/callback`
     );
     const data = await response.json();
     return data;
