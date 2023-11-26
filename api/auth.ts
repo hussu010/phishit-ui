@@ -108,8 +108,10 @@ export const isRefreshTokenExpired = (refreshToken: string) => {
 
 export const getGoogleAuthUrl = async () => {
   try {
+    const ORIGIN = window.location.origin;
+
     const response = await fetch(
-      `${API_URL}/api/auth/o/google?redirect_uri=http://localhost:3000/auth/google/callback`
+      `${API_URL}/api/auth/o/google?redirect_uri=${ORIGIN}/auth/google/callback`
     );
     const data = await response.json();
     return data;
