@@ -2,6 +2,8 @@ import Link from "next/link";
 import Image from "next/image";
 import React from "react";
 
+import { API_URL } from "@/config/constants";
+
 interface AdventureCardProps {
   _id: string;
   title: string;
@@ -11,7 +13,7 @@ interface AdventureCardProps {
 }
 
 const getAdventures = async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/adventures`);
+  const res = await fetch(`${API_URL}/api/adventures`);
 
   if (!res.ok) {
     throw new Error("Failed to fetch data");
