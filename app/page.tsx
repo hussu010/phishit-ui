@@ -1,13 +1,13 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
-import AdventureCard from "@/components/AdventureCard";
+import Adventures from "@/components/Adventures";
 
 export default function Home() {
   return (
     <div className="bg-white">
       <Navbar />
       <Hero />
-      <AdventureCard />
+      <Adventures />
     </div>
   );
 }
