@@ -11,7 +11,7 @@ interface AdventureCardProps {
 }
 
 const getAdventures = async () => {
-  const res = await fetch("http://localhost:5000/api/adventures");
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/adventures`);
 
   if (!res.ok) {
     throw new Error("Failed to fetch data");
