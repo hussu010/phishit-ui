@@ -13,7 +13,11 @@ interface AdventureCardProps {
 }
 
 const getAdventures = async () => {
-  const res = await fetch(`${API_URL}/api/adventures`);
+  const res = await fetch(`${API_URL}/api/adventures`, {
+    next: {
+      revalidate: 3600,
+    },
+  });
 
   if (!res.ok) {
     throw new Error("Failed to fetch data");
