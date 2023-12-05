@@ -40,17 +40,13 @@ const callsToAction: CallToAction[] = [
   { name: "Contact sales", href: "#", icon: PhoneIcon },
 ];
 
-function classNames(...classes: (string | boolean)[]) {
-  return classes.filter(Boolean).join(" ");
-}
-
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
 
   return (
-    <header className="absolute inset-x-0 top-0 z-50">
+    <header>
       <nav
         className="flex items-center justify-between p-6 lg:px-8"
         aria-label="Global"
