@@ -44,7 +44,9 @@ export default function GoogleCallback() {
   return (
     <div>
       <Navbar />
-      <Button>Click me</Button>
+      <div className="flex flex-col items-center justify-center h-screen">
+        Redirecting to home page...
+      </div>
     </div>
   );
 }

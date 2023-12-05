@@ -1,26 +1,16 @@
 "use client";
 
-import { Fragment, useEffect, useState } from "react";
-import { Dialog, Disclosure, Popover, Transition } from "@headlessui/react";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  ArrowPathIcon,
-  Bars3Icon,
-  ChartPieIcon,
-  CursorArrowRaysIcon,
-  FingerPrintIcon,
-  SquaresPlusIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
-import {
-  ChevronDownIcon,
-  PhoneIcon,
-  PlayCircleIcon,
-} from "@heroicons/react/20/solid";
+import { useState } from "react";
+import { Dialog } from "@headlessui/react";
+import { useSelector } from "react-redux";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { PhoneIcon, PlayCircleIcon } from "@heroicons/react/20/solid";
 
 import LoginDialog from "./LoginDialog";
 import UserNav from "./UserNav";
 import { RootState } from "@/redux/reducer";
+import Link from "next/link";
+import Image from "next/image";
 
 const navigation = [
   { name: "Product", href: "#" },
@@ -52,14 +42,14 @@ export default function Navbar() {
         aria-label="Global"
       >
         <div className="flex lg:flex-1">
-          <a href="#" className="-m-1.5 p-1.5">
-            <span className="sr-only">Your Company</span>
-            <img
-              className="h-8 w-auto"
-              src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-              alt=""
+          <Link href="/">
+            <Image
+              src="/images/logo_small.png"
+              alt="logo"
+              width={40}
+              height={40}
             />
-          </a>
+          </Link>
         </div>
         <div className="flex lg:hidden">
           <button
@@ -95,14 +85,14 @@ export default function Navbar() {
         <div className="fixed inset-0 z-50" />
         <Dialog.Panel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div className="flex items-center justify-between">
-            <a href="#" className="-m-1.5 p-1.5">
-              <span className="sr-only">Your Company</span>
-              <img
-                className="h-8 w-auto"
-                src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-                alt=""
+            <Link href="/">
+              <Image
+                src="/images/logo_small.png"
+                alt="logo"
+                width={40}
+                height={40}
               />
-            </a>
+            </Link>
             <button
               type="button"
               className="-m-2.5 rounded-md p-2.5 text-gray-700"
