@@ -1,8 +1,6 @@
-import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import Image from "next/image";
 
 import { StarIcon } from "@heroicons/react/20/solid";
-import { RadioGroup } from "@headlessui/react";
 import Navbar from "@/components/Navbar";
 
 import { getAdventureById } from "@/api/adventures";
@@ -75,38 +73,21 @@ export default async function Page({
   return (
     <div className="absoulte bg-white">
       <Navbar />
-      {/* Image gallery */}
-      <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-x-8 lg:px-8">
-        <div className="aspect-h-4 aspect-w-3 hidden overflow-hidden rounded-lg lg:block">
-          <img
-            src={product.images[0].src}
-            alt={product.images[0].alt}
-            className="h-full w-full object-cover object-center"
-          />
-        </div>
-        <div className="hidden lg:grid lg:grid-cols-1 lg:gap-y-8">
-          <div className="aspect-h-2 aspect-w-3 overflow-hidden rounded-lg">
-            <img
-              src={product.images[1].src}
-              alt={product.images[1].alt}
-              className="h-full w-full object-cover object-center"
+      <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:max-w-7xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 gap-4">
+        {adventure.images.map((image, index) => (
+          <div
+            key={index}
+            className="group overflow-hidden rounded-lg shadow-lg transition-transform transform hover:scale-105"
+          >
+            <Image
+              src={image.url}
+              alt={image.url}
+              className="w-full h-80 object-cover"
+              width={480}
+              height={640}
             />
           </div>
-          <div className="aspect-h-2 aspect-w-3 overflow-hidden rounded-lg">
-            <img
-              src={product.images[2].src}
-              alt={product.images[2].alt}
-              className="h-full w-full object-cover object-center"
-            />
-          </div>
-        </div>
-        <div className="aspect-h-5 aspect-w-4 lg:aspect-h-4 lg:aspect-w-3 sm:overflow-hidden sm:rounded-lg">
-          <img
-            src={product.images[3].src}
-            alt={product.images[3].alt}
-            className="h-full w-full object-cover object-center"
-          />
-        </div>
+        ))}
       </div>
 
       {/* Product info */}

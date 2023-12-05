@@ -1,6 +1,33 @@
 import { API_URL } from "@/config/constants";
 
-export const getAdventureById = async (id: string) => {
+export type Package = {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  duration: number;
+};
+
+export type Adventure = {
+  id: string;
+  title: string;
+  description: string;
+  location: {
+    type: "Point";
+    coordinates: [number, number];
+  };
+  imageUrl: string;
+  imageAlt: string;
+  images: [
+    {
+      url: string;
+      position: number;
+    }
+  ];
+  packages: Package[];
+};
+
+export const getAdventureById = async (id: string): Promise<Adventure> => {
   try {
     const response = await fetch(`${API_URL}/api/adventures/${id}`, {
       method: "GET",
@@ -19,7 +46,7 @@ export const getAdventureById = async (id: string) => {
       }
     }
 
-    return data;
+    return data as Adventure;
   } catch (error) {
     console.error("Error getting adventure:", error);
     throw error;
