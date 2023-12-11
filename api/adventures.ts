@@ -1,7 +1,7 @@
 import { API_URL } from "@/config/constants";
 
 export type Package = {
-  id: string;
+  _id: string;
   title: string;
   description: string;
   price: number;
@@ -9,7 +9,7 @@ export type Package = {
 };
 
 export type Adventure = {
-  id: string;
+  _id: string;
   title: string;
   description: string;
   location: {
