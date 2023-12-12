@@ -1,6 +1,5 @@
 import Image from "next/image";
 
-import { StarIcon } from "@heroicons/react/20/solid";
 import Navbar from "@/components/Navbar";
 
 import { getAdventureById } from "@/api/adventures";
@@ -32,7 +31,6 @@ export default async function Page({
         ))}
       </div>
 
-      {/* Product info */}
       <div className="mx-auto max-w-2xl px-4 pb-16 pt-10 sm:px-6 lg:max-w-7xl lg:px-8 lg:pb-24 lg:pt-16">
         <div className="lg:col-span-2 lg:pr-8">
           <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
@@ -41,7 +39,6 @@ export default async function Page({
         </div>
 
         <div className="py-10 lg:col-start-1 lg:pb-16 lg:pr-8 lg:pt-6">
-          {/* Description and details */}
           <div>
             <h3 className="sr-only">Description</h3>
 
@@ -51,18 +48,30 @@ export default async function Page({
           </div>
 
           <div className="mt-10">
-            <h2 className="text-2xl text-gray-900">Packages</h2>
+            <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
+              Packages
+            </h1>
 
             <div className="mt-4">
-              <ul role="list" className="list-disc space-y-2 pl-4 text-sm">
-                {adventure.packages.map((adventurePackage) => (
-                  <li key={adventurePackage._id} className="text-gray-400">
-                    <span className="text-gray-600">
+              {adventure.packages.map((adventurePackage) => (
+                <div
+                  key={adventurePackage._id}
+                  className="flex flex-col justify-between py-4 border-t border-gray-200"
+                >
+                  <div className="flex justify-between">
+                    <h2 className="text-xl font-medium text-gray-900">
                       {adventurePackage.title}
-                    </span>
-                  </li>
-                ))}
-              </ul>
+                    </h2>
+                    <p className="text-sm text-gray-800">
+                      Rs. {adventurePackage.price}
+                    </p>
+                  </div>
+
+                  <p className="text-sm text-gray-600">
+                    {adventurePackage.description}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
 
