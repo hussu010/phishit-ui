@@ -1,4 +1,9 @@
+"use client";
+
 import Image from "next/image";
+import Link from "next/link";
+import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 
 import Navbar from "@/components/Navbar";
 import {
@@ -11,14 +16,18 @@ import {
 import { Button, buttonVariants } from "@/components/ui/button";
 import { AdventureCardProps } from "@/config/types";
 import { API_URL } from "@/config/constants";
-import { Link } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { RootState } from "@/redux/reducer";
 
 const getAdventures = async () => {
-  const res = await fetch(`${API_URL}/api/adventures`, {
-    next: {
-      revalidate: 3600,
-    },
-  });
+  const res = await fetch(`${API_URL}/api/adventures`);
 
   if (!res.ok) {
     throw new Error("Failed to fetch data");
@@ -27,8 +36,35 @@ const getAdventures = async () => {
   return res.json();
 };
 
-export default async function Adventures() {
-  const adventures: AdventureCardProps[] = await getAdventures();
+export default function Adventures() {
+  const [adventures, setAdventures] = useState<AdventureCardProps[]>([]);
+
+  const { accessToken } = useSelector((state: RootState) => state.auth);
+
+  useEffect(() => {
+    getAdventures()
+      .then((adventures) => setAdventures(adventures))
+      .catch((err) => console.error(err));
+  }, []);
+
+  const handleDelete = async (id: string) => {
+    const res = await fetch(`${API_URL}/api/adventures/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to delete adventure");
+    }
+
+    const newAdventures = adventures.filter(
+      (adventure) => adventure._id !== id
+    );
+
+    setAdventures(newAdventures);
+  };
 
   return (
     <div className="bg-white">
@@ -61,10 +97,37 @@ export default async function Adventures() {
               <Button className="mt-2" variant="outline">
                 Edit
               </Button>
-              <Button className="mt-2" variant="destructive">
-                Delete
-              </Button>
-              <Button className="mt-2">View</Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="destructive">Delete</Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Are you sure absolutely sure?</DialogTitle>
+                    <DialogDescription>
+                      This action cannot be undone. This will permanently delete
+                      the adventure.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <Button
+                    className="mt-2"
+                    variant="destructive"
+                    onClick={() => {
+                      handleDelete(adventure._id);
+                    }}
+                  >
+                    Delete
+                  </Button>
+                </DialogContent>
+              </Dialog>
+
+              <Link
+                href={`/adventures/${adventure._id}`}
+                target="_blank"
+                className={buttonVariants({ variant: "default" })}
+              >
+                View
+              </Link>
             </CardContent>
           </Card>
         ))}
