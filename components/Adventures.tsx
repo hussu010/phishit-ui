@@ -3,14 +3,7 @@ import Image from "next/image";
 import React from "react";
 
 import { API_URL } from "@/config/constants";
-
-interface AdventureCardProps {
-  _id: string;
-  title: string;
-  description: string;
-  imageUrl: string;
-  imageAlt: string;
-}
+import { AdventureCardProps } from "@/config/types";
 
 const getAdventures = async () => {
   const res = await fetch(`${API_URL}/api/adventures`, {
