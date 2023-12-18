@@ -13,10 +13,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { logout } from "@/redux/features/auth-slice";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/reducer";
 
 export default function UserNav() {
   const dispatch = useDispatch();
+
+  const { username, phoneNumber, googleId } = useSelector(
+    (state: RootState) => state.users
+  );
+  console.log(username, phoneNumber, googleId);
 
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
@@ -37,9 +44,9 @@ export default function UserNav() {
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">shadcn</p>
+            <p className="text-sm font-medium leading-none">{username}</p>
             <p className="text-xs leading-none text-muted-foreground">
-              m@example.com
+              {phoneNumber || googleId}
             </p>
           </div>
         </DropdownMenuLabel>

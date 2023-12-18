@@ -23,7 +23,9 @@ type FieldErrors = {
 };
 
 import { sendOtp, createJWT, getGoogleAuthUrl } from "@/api/auth";
+import { getMe } from "@/api/users";
 import { loginSuccess } from "@/redux/features/auth-slice";
+import { setUser } from "@/redux/features/users-slice";
 
 function LoginDialog() {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -93,6 +95,8 @@ function LoginDialog() {
         method: "phone",
       });
 
+      const user = await getMe(accessToken);
+
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
       setOpenOtpDialog(false);
@@ -100,6 +104,13 @@ function LoginDialog() {
         loginSuccess({
           accessToken,
           refreshToken,
+        })
+      );
+      dispatch(
+        setUser({
+          phoneNumber: user.phoneNumber,
+          username: user.username,
+          roles: user.roles,
         })
       );
     } catch (errors) {
