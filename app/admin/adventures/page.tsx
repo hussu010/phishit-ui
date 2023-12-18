@@ -38,6 +38,7 @@ const getAdventures = async () => {
 
 export default function Adventures() {
   const [adventures, setAdventures] = useState<AdventureCardProps[]>([]);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const { accessToken } = useSelector((state: RootState) => state.auth);
 
@@ -48,22 +49,31 @@ export default function Adventures() {
   }, []);
 
   const handleDelete = async (id: string) => {
-    const res = await fetch(`${API_URL}/api/adventures/${id}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+    try {
+      const res = await fetch(`${API_URL}/api/adventures/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
 
-    if (!res.ok) {
-      throw new Error("Failed to delete adventure");
+      if (!res.ok) {
+        const errorData = await res.json();
+        const errorMessage = errorData.message || "Failed to delete adventure";
+        throw new Error(
+          `Error deleting adventure: ${res.status} ${errorMessage}`
+        );
+      }
+
+      const newAdventures = adventures.filter(
+        (adventure) => adventure._id !== id
+      );
+
+      setAdventures(newAdventures);
+    } catch (err: any) {
+      console.error(err.message);
+      setErrorMessage(err.message);
     }
-
-    const newAdventures = adventures.filter(
-      (adventure) => adventure._id !== id
-    );
-
-    setAdventures(newAdventures);
   };
 
   return (
@@ -104,6 +114,9 @@ export default function Adventures() {
                 <DialogContent>
                   <DialogHeader>
                     <DialogTitle>Are you sure absolutely sure?</DialogTitle>
+                    {errorMessage && (
+                      <div className="text-red-500 mt-2">{errorMessage}</div>
+                    )}
                     <DialogDescription>
                       This action cannot be undone. This will permanently delete
                       the adventure.
