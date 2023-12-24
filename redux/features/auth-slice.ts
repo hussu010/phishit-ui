@@ -3,8 +3,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  accessToken: null,
-  refreshToken: null,
+  accessToken: "",
+  refreshToken: "",
   isAuthenticated: false,
 };
 
@@ -18,8 +18,8 @@ export const authSlice = createSlice({
       state.isAuthenticated = true;
     },
     logout: (state) => {
-      state.accessToken = null;
-      state.refreshToken = null;
+      state.accessToken = "";
+      state.refreshToken = "";
       state.isAuthenticated = false;
     },
   },

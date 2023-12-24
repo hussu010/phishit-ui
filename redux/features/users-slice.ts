@@ -3,10 +3,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  _id: null,
-  phoneNumber: null,
-  googleId: null,
-  username: null,
+  _id: "",
+  phoneNumber: "",
+  googleId: "",
+  username: "",
   roles: [],
 };
 
@@ -22,10 +22,10 @@ export const userSlice = createSlice({
       state.roles = action.payload.roles;
     },
     removeUser: (state) => {
-      state._id = null;
-      state.phoneNumber = null;
-      state.googleId = null;
-      state.username = null;
+      state._id = "";
+      state.phoneNumber = "";
+      state.googleId = "";
+      state.username = "";
       state.roles = [];
     },
   },
