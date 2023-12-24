@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { useSelector } from "react-redux";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { PhoneIcon, PlayCircleIcon } from "@heroicons/react/20/solid";
+import { PlusCircleIcon } from "@heroicons/react/20/solid";
 
 import LoginDialog from "./LoginDialog";
 import UserNav from "./UserNav";
@@ -26,8 +26,7 @@ interface CallToAction {
 }
 
 const callsToAction: CallToAction[] = [
-  { name: "Watch demo", href: "#", icon: PlayCircleIcon },
-  { name: "Contact sales", href: "#", icon: PhoneIcon },
+  { name: "Become a guide", href: "/guide-requests", icon: PlusCircleIcon },
 ];
 
 export default function Navbar() {
@@ -68,6 +67,18 @@ export default function Navbar() {
               href={item.href}
               className="text-sm font-semibold leading-6 text-gray-900"
             >
+              {item.name}
+            </a>
+          ))}
+        </div>
+        <div className="hidden lg:flex lg:items-center lg:justify-end lg:flex-1 lg:gap-x-12">
+          {callsToAction.map((item) => (
+            <a
+              key={item.name}
+              href={item.href}
+              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-gray-900 hover:bg-gray-800"
+            >
+              <item.icon className="mr-2 h-5 w-5" aria-hidden="true" />
               {item.name}
             </a>
           ))}

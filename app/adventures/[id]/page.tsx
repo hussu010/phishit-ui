@@ -1,6 +1,7 @@
 import Image from "next/image";
 
 import Navbar from "@/components/Navbar";
+import { Button } from "@/components/ui/button";
 
 import { getAdventureById } from "@/api/adventures";
 
@@ -70,6 +71,13 @@ export default async function Page({
                   <p className="text-sm text-gray-600">
                     {adventurePackage.description}
                   </p>
+                  <p className="text-sm text-gray-600">
+                    Duration: {adventurePackage.duration} days
+                  </p>
+                  <div className="flex justify-end my-2">
+                    <Button className="mx-2">Book Now</Button>
+                    <Button className="mx-2">Subscribe to this package</Button>
+                  </div>
                 </div>
               ))}
             </div>
