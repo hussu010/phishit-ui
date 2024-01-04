@@ -16,7 +16,8 @@ export const createGuideRequest = async ({
   phoneNumber,
   email,
   address,
-  cover_letter,
+  message,
+  documents,
   accessToken,
 }: {
   type: string;
@@ -24,7 +25,8 @@ export const createGuideRequest = async ({
   phoneNumber: string;
   email: string;
   address: string;
-  cover_letter: string;
+  message: string;
+  documents: { url: string; type: string }[];
   accessToken: string;
 }): Promise<GuideRequest> => {
   try {
@@ -40,7 +42,8 @@ export const createGuideRequest = async ({
         phoneNumber,
         email,
         address,
-        cover_letter,
+        message,
+        documents,
       }),
     });
 

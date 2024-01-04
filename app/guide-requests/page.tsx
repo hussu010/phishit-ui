@@ -2,10 +2,10 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { Controller, set, useForm } from "react-hook-form";
 import * as z from "zod";
 
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -20,7 +20,9 @@ import {
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -34,6 +36,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/redux/reducer";
 
 import Navbar from "@/components/Navbar";
+import Image from "next/image";
 
 const FormSchema = z.object({
   type: z.enum(["INDIVIDUAL", "ORGANIZATION"], {
@@ -50,12 +53,30 @@ const FormSchema = z.object({
     "COMPANY_REGISTRATION_CERTIFICATE",
     "OTHER",
   ]),
+  document: z.any().refine(
+    (file) => {
+      return (
+        file &&
+        (file.type === "image/jpeg" ||
+          file.type === "image/png" ||
+          file.type === "image/gif" ||
+          file.type === "image/webp")
+      );
+    },
+    {
+      message: "Please upload a valid image file (JPEG, PNG, GIF, or WebP)",
+    }
+  ),
 });
 
 export default function PostCreate() {
   const router = useRouter();
   const [errorMessage, setErrorMessage] = useState<string>("");
   const { accessToken } = useSelector((state: RootState) => state.auth);
+  const baseURL = process.env.NEXT_PUBLIC_API_URL;
+  const [documentDetail, setDocumnetDetail] = useState<
+    { url: string; type: string }[]
+  >([]);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -66,21 +87,37 @@ export default function PostCreate() {
       email: "",
       address: "",
       cover_letter: "",
+      documentTitle: "OTHER",
     },
   });
 
+  function deleteDetail(
+    e: React.MouseEvent<HTMLButtonElement>,
+    indexToDelete: number
+  ) {
+    e.preventDefault();
+    const updatedData = documentDetail.filter(
+      (_: any, index: number) => index !== indexToDelete
+    );
+    setDocumnetDetail(updatedData);
+  }
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
       setErrorMessage("");
       const { type, name, phoneNumber, email, address, cover_letter } = data;
 
-      const response = await createGuideRequest({
+      if (documentDetail.length === 0) {
+        throw new Error("Please upload at least one document.");
+      }
+
+      await createGuideRequest({
         type,
         name,
         phoneNumber,
         email,
         address,
-        cover_letter,
+        message: cover_letter,
+        documents: documentDetail,
         accessToken,
       });
 
@@ -89,6 +126,61 @@ export default function PostCreate() {
     } catch (error: any) {
       console.error(error);
       setErrorMessage(error.message);
+    }
+  }
+
+  async function saveImage(e: React.MouseEvent<HTMLButtonElement>) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const { document, documentTitle } = form.getValues();
+
+    try {
+      // Validate 'documentTitle' field using Zod
+      FormSchema.pick({ documentTitle: true }).parse({ documentTitle });
+
+      // Perform file type validation for 'document'
+      const file = document as File;
+      if (
+        file &&
+        (file.type === "image/jpeg" ||
+          file.type === "image/png" ||
+          file.type === "image/gif" ||
+          file.type === "image/webp")
+      ) {
+        const formData = new FormData();
+        formData.append("images", file);
+
+        const response = await fetch(`${baseURL}/api/upload-images`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: formData,
+        });
+
+        if (!response.ok) {
+          console.error("Error uploading file:", response.statusText);
+        } else {
+          const data = await response.json();
+          // Validate 'documentTitle' against allowed values
+          FormSchema.pick({ documentTitle: true }).parse({ documentTitle });
+
+          setDocumnetDetail((prev: any) => [
+            ...prev,
+            { url: data.url, type: documentTitle },
+          ]);
+
+          form.setValue("document", undefined);
+          form.setValue("documentTitle", "OTHER");
+        }
+      } else {
+        throw new Error(
+          "Please upload a valid image file (JPEG, PNG, GIF, or WebP)"
+        );
+      }
+    } catch (error) {
+      console.error(error);
     }
   }
 
@@ -212,6 +304,95 @@ export default function PostCreate() {
                 </FormItem>
               )}
             />
+
+            <fieldset className="border-[#222] border-[2px] p-[20px] flex flex-col gap-[40px]">
+              <legend className="bg-black text-white px-5 py-2">
+                Attach Document
+              </legend>
+              <FormField
+                control={form.control}
+                name="documentTitle"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Cover Letter</FormLabel>
+                    <FormControl>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <SelectTrigger className="w-[180px]">
+                          <SelectValue placeholder="Document Type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectItem value="NID">NID</SelectItem>
+                            <SelectItem value="PASSPORT">PASSPORT</SelectItem>
+                            <SelectItem value="COMPANY_REGISTRATION_CERTIFICATE">
+                              COMPANY_REGISTRATION_CERTIFICATE
+                            </SelectItem>
+                            <SelectItem value="OTHER">OTHER</SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="document"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Upload documents
+                      {documentDetail && (
+                        <div className="flex gap-5 overflow-x-scroll">
+                          {documentDetail.map((item: any, index: number) => {
+                            return (
+                              <div
+                                key={index}
+                                className="flex flex-col gap-2 border-b"
+                              >
+                                <Image
+                                  src={item.url}
+                                  alt="type"
+                                  width={200}
+                                  height={200}
+                                />
+                                <p>{item.type}</p>
+                                <Button
+                                  variant="destructive"
+                                  onClick={(e) => deleteDetail(e, index)}
+                                >
+                                  Delete
+                                </Button>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="file"
+                        className="cursor-pointer"
+                        onChange={(e) => {
+                          const file = e.target.files![0];
+                          // Update form state with the selected file
+                          form.setValue("document", file);
+                          // Optionally, handle additional logic related to the file selection
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button onClick={saveImage}>save</Button>
+            </fieldset>
+            <br />
             <Button type="submit">Submit</Button>
           </form>
         </Form>

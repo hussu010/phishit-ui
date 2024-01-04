@@ -16,7 +16,7 @@ const getAdventures = async () => {
     throw new Error("Failed to fetch data");
   }
 
-  return res.json();
+  return await res.json();
 };
 
 const AdventureCard: React.FC<AdventureCardProps> = ({
