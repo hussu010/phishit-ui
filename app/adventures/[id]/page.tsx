@@ -4,6 +4,8 @@ import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 
 import { getAdventureById } from "@/api/adventures";
+import Package from "@/components/AdventurePackage";
+import AdventurePackage from "@/components/AdventurePackage";
 
 export default async function Page({
   params: { id },
@@ -54,32 +56,7 @@ export default async function Page({
             </h1>
 
             <div className="mt-4">
-              {adventure.packages.map((adventurePackage) => (
-                <div
-                  key={adventurePackage._id}
-                  className="flex flex-col justify-between py-4 border-t border-gray-200"
-                >
-                  <div className="flex justify-between">
-                    <h2 className="text-xl font-medium text-gray-900">
-                      {adventurePackage.title}
-                    </h2>
-                    <p className="text-sm text-gray-800">
-                      Rs. {adventurePackage.price}
-                    </p>
-                  </div>
-
-                  <p className="text-sm text-gray-600">
-                    {adventurePackage.description}
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    Duration: {adventurePackage.duration} days
-                  </p>
-                  <div className="flex justify-end my-2">
-                    <Button className="mx-2">Book Now</Button>
-                    <Button className="mx-2">Subscribe to this package</Button>
-                  </div>
-                </div>
-              ))}
+              <AdventurePackage packages={adventure.packages} id={id} />
             </div>
           </div>
 

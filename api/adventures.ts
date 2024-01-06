@@ -27,6 +27,10 @@ export type Adventure = {
   packages: Package[];
 };
 
+export type AdventureTime = {
+  starDate: string;
+};
+
 export const getAdventureById = async (id: string): Promise<Adventure> => {
   try {
     const response = await fetch(`${API_URL}/api/adventures/${id}`, {
@@ -50,5 +54,76 @@ export const getAdventureById = async (id: string): Promise<Adventure> => {
   } catch (error) {
     console.error("Error getting adventure:", error);
     throw error;
+  }
+};
+
+export const postAdventureReqGuide = async (
+  id: string,
+  accessToken: string,
+  date: string
+) => {
+  try {
+    const response = await fetch(`${API_URL}/api/adventures/${id}/guides`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({
+        startDate: date,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      if (response.status === 500 && data.message) {
+        throw new Error(data.message);
+      } else {
+        throw new Error("Unknown error occurred");
+      }
+    }
+    return data;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const BookAdventure = async (
+  adventureId: string,
+  packageId: string,
+  guideId: string,
+  startDate: string,
+  noOfPeople: number,
+  accessToken: string
+) => {
+  try {
+    const response = await fetch(`${API_URL}/api/bookings`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({
+        adventureId,
+        packageId,
+        guideId,
+        startDate,
+        noOfPeople,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      if (response.status === 500 && data.message) {
+        throw new Error(data.message);
+      } else {
+        throw new Error("Unknown error occurred");
+      }
+    }
+    return data;
+  } catch (err) {
+    console.log(err);
   }
 };
