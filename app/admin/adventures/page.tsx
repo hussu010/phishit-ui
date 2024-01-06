@@ -13,6 +13,7 @@ import {
   CardContent,
   Card,
 } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { AdventureCardProps } from "@/config/types";
 import { API_URL } from "@/config/constants";
@@ -79,11 +80,23 @@ export default function Adventures() {
   return (
     <div className="bg-white">
       <Navbar />
-
+      <div className="flex-1 space-y-4 p-8 pt-6">
+        <Tabs defaultValue="overview" className="space-y-4">
+          <TabsList>
+            <Link href="/admin/adventures">
+              <TabsTrigger value="manage-adventures">
+                Manage Adventures
+              </TabsTrigger>
+            </Link>
+            <Link href="/admin/guide-requests">
+              <TabsTrigger value="guide-requests">Guide Requests</TabsTrigger>
+            </Link>
+            <TabsTrigger value="reports">Reports</TabsTrigger>
+            <TabsTrigger value="notifications">Notifications</TabsTrigger>
+          </TabsList>
+        </Tabs>
+      </div>
       <div className="text-center my-6">
-        <h2 className="mt-4 text-lg font-bold tracking-tight text-gray-900 sm:text-4xl">
-          Modify Adventures
-        </h2>
         <Button className="mt-2" variant="default">
           Create New Adventure
         </Button>

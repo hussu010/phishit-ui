@@ -1,11 +1,10 @@
 import Image from "next/image";
 
 import Navbar from "@/components/Navbar";
-import { Button } from "@/components/ui/button";
 
 import { getAdventureById } from "@/api/adventures";
-import Package from "@/components/AdventurePackage";
 import AdventurePackage from "@/components/AdventurePackage";
+import EnrollAdventureDialog from "@/components/EnrollAdventureDialog";
 
 export default async function Page({
   params: { id },
@@ -35,10 +34,13 @@ export default async function Page({
       </div>
 
       <div className="mx-auto max-w-2xl px-4 pb-16 pt-10 sm:px-6 lg:max-w-7xl lg:px-8 lg:pb-24 lg:pt-16">
-        <div className="lg:col-span-2 lg:pr-8">
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
+        <div className="flex items-center justify-between space-y-2">
+          <h2 className="text-3xl font-bold tracking-tight">
             {adventure.title}
-          </h1>
+          </h2>
+          <div className="flex items-center space-x-2">
+            <EnrollAdventureDialog />
+          </div>
         </div>
 
         <div className="py-10 lg:col-start-1 lg:pb-16 lg:pr-8 lg:pt-6">

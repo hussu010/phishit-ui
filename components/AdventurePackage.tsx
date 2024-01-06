@@ -94,7 +94,6 @@ function AdventurePackage({
                 </DialogFooter>
               </DialogContent>
             </Dialog>
-            <Button className="mx-2">Subscribe to this package</Button>
           </div>
         </div>
       ))}
