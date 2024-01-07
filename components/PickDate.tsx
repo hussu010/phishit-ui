@@ -37,6 +37,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Guide } from "@/api/guide-requests";
 
 const bookingFormSchema = z.object({
   noOfPeople: z.string().min(1, "Number of people must be at least 1"),
@@ -58,9 +59,7 @@ export function PickDate({
   const route = useRouter();
   const [startDate, setStartDate] = useState<string>("");
   const [currentState, setCurrentState] = useState<"date" | "guide">("date");
-  const [guides, setGuides] = useState<
-    { _id: string; username: string; isAvailable: boolean }[]
-  >([]);
+  const [guides, setGuides] = useState<Guide[]>([]);
 
   const bookingForm = useForm<z.infer<typeof bookingFormSchema>>({
     resolver: zodResolver(bookingFormSchema),
@@ -108,8 +107,9 @@ export function PickDate({
         title: "Booking Successful",
         description: "You have successfully booked the adventure",
       });
+      console.log(booking);
 
-      route.replace(`/`);
+      route.push(`/booking/${booking._id}`);
     }
   };
 

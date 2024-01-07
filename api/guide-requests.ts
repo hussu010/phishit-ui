@@ -10,6 +10,14 @@ export type GuideRequest = {
   cover_letter: string;
 };
 
+export type Guide = {
+  _id: string;
+  username: string;
+  isAvailable: boolean;
+ 
+};
+
+
 export const createGuideRequest = async ({
   type,
   name,
