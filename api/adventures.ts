@@ -127,3 +127,43 @@ export const BookAdventure = async (
     console.log(err);
   }
 };
+
+export const EnrollAdventure = async ({
+  adventureId,
+  accessToken,
+}: {
+  adventureId: string;
+  accessToken: string;
+}) => {
+  try {
+    const response = await fetch(
+      `${API_URL}/api/adventures/${adventureId}/enroll`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      if (
+        (response.status === 500 && data.message) ||
+        (response.status === 401 && data.message) ||
+        (response.status === 403 && data.message) ||
+        (response.status === 409 && data.message)
+      ) {
+        throw new Error(data.message);
+      } else {
+        throw new Error("Unknown error occurred");
+      }
+    }
+    return data;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};

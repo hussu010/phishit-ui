@@ -39,7 +39,7 @@ export default async function Page({
             {adventure.title}
           </h2>
           <div className="flex items-center space-x-2">
-            <EnrollAdventureDialog />
+            <EnrollAdventureDialog id={id} />
           </div>
         </div>
 
