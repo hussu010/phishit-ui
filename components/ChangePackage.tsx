@@ -23,7 +23,13 @@ import {
 } from "@/components/ui/drawer";
 import { Package } from "@/api/adventures";
 
-export default function ChangePackage({ packages, handlePackage }: { packages: Package[];  handlePackage: (id: string) => void}) {
+export default function ChangePackage({
+  packages,
+  handlePackage,
+}: {
+  packages: Package[];
+  handlePackage: (id: string) => void;
+}) {
   return (
     <Drawer>
       <DrawerTrigger asChild>
@@ -40,17 +46,23 @@ export default function ChangePackage({ packages, handlePackage }: { packages: P
           <div className="grid md:grid-cols-5 grid-cols-3 gap-3">
             {packages.map((adventurePackage) => {
               return (
-                <DrawerClose asChild key={adventurePackage._id} onClick={()=>handlePackage(adventurePackage._id)}>
+                <DrawerClose
+                  asChild
+                  key={adventurePackage._id}
+                  onClick={() => handlePackage(adventurePackage._id)}
+                >
                   <Card className="cursor-pointer">
                     <CardHeader>
                       <CardTitle>{adventurePackage.title}</CardTitle>
-                       <CardDescription className=" line-clamp-2">{ adventurePackage.description}</CardDescription>
+                      <CardDescription className=" line-clamp-2">
+                        {adventurePackage.description}
+                      </CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <p>Duration: { adventurePackage.duration} days</p>
+                      <p>Duration: {adventurePackage.duration} days</p>
                     </CardContent>
                     <CardFooter>
-                              <p>Nrs. { adventurePackage.price }</p>
+                      <p>Nrs. {adventurePackage.price}</p>
                     </CardFooter>
                   </Card>
                 </DrawerClose>

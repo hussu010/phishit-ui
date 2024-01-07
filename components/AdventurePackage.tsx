@@ -85,6 +85,8 @@ function AdventurePackage({
                     <HoverCardContent>
                       <h1 className="font-bold">{currentPackage.title}</h1>
                       <p>{currentPackage.description}</p>
+                      <p>Duration: {currentPackage.duration} days</p>
+                      <p>Price: Rs. {currentPackage.price}</p>
                     </HoverCardContent>
                   </HoverCard>
                   <ChangePackage

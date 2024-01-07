@@ -21,21 +21,20 @@ import React, { useEffect, useState } from "react";
 
 import { useSelector } from "react-redux";
 
-function page({ params: { id } }: { params: { id: string } }) {
+export default function Page({ params: { id } }: { params: { id: string } }) {
   const param = useSearchParams();
 
-  const payment = param.get("payment");
   const { accessToken } = useSelector((state: RootState) => state.auth);
   const [booking, setBooking] = useState<Booking>();
-  if (payment !== "confirmed") {
-    useEffect(() => {
-      async function getBooking(accessToken: string, bookId: string) {
-        const book = await getBookingById(accessToken, bookId);
-        setBooking(book);
-      }
-      getBooking(accessToken, id);
-    }, []);
-  }
+  const payment = "confirmed";
+
+  useEffect(() => {
+    async function getBooking(accessToken: string, bookId: string) {
+      const book = await getBookingById(accessToken, bookId);
+      setBooking(book);
+    }
+    getBooking(accessToken, id);
+  }, []);
 
   async function handlePay(bookingId: string | undefined) {
     const response = await initPayment(
@@ -108,5 +107,3 @@ function page({ params: { id } }: { params: { id: string } }) {
     </>
   );
 }
-
-export default page;

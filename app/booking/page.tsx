@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 
-function page() {
+export default function Page() {
   const { accessToken } = useSelector((state: RootState) => state.auth);
   const [bookings, setBookings] = React.useState<Booking[]>([]);
   console.log(accessToken);
@@ -35,10 +35,12 @@ function page() {
             <Card key={booking._id}>
               <CardHeader>
                 <CardTitle>Package Name: {booking.package.title}</CardTitle>
-                    <CardDescription>package id: { booking.package._id}</CardDescription>
+                <CardDescription>
+                  Package id: {booking.package._id}
+                </CardDescription>
               </CardHeader>
               <CardContent>
-                      <p>Guide Name:</p>
+                <p>Guide Name:</p>
               </CardContent>
               <CardFooter>
                 <p>Card Footer</p>
@@ -50,5 +52,3 @@ function page() {
     </>
   );
 }
-
-export default page;
