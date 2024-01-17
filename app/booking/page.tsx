@@ -1,5 +1,6 @@
 "use client";
 import { Booking, getBookings } from "@/api/booking";
+import Navbar from "@/components/Navbar";
 import {
   Card,
   CardContent,

@@ -23,4 +23,5 @@ export interface GuideRequestProps {
   documents: DocumentProps[];
   createdAt: string;
   updatedAt: string;
+  status: string;
 }

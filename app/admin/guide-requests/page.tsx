@@ -26,32 +26,19 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { RootState } from "@/redux/reducer";
-
-const getGuideRequests = async (accessToken: string) => {
-  const res = await fetch(`${API_URL}/api/guide-requests`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
-  }
-
-  return res.json();
-};
+import { getGuideRequests } from "@/api/guide-requests";
 
 export default function Adventures() {
   const [guideRequests, setGuideRequests] = useState<GuideRequestProps[]>([]);
   const { accessToken } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
-    getGuideRequests(accessToken)
-      .then((guideRequests) => setGuideRequests(guideRequests))
-      .catch((err) => console.error(err));
-  }, [accessToken]);
+    async function getAllGuideRequests(accessToken: string) {
+      const guideRequests = await getGuideRequests(accessToken);
+      setGuideRequests(guideRequests);
+    }
+    getAllGuideRequests(accessToken);
+  }, []);
 
   const handleGuideRequestApproval = async ({
     id,
@@ -77,8 +64,10 @@ export default function Adventures() {
       const updatedGuideRequest = await res.json();
 
       setGuideRequests((guideRequests) =>
-        guideRequests.filter(
-          (guideRequest) => guideRequest._id !== updatedGuideRequest._id
+        guideRequests.map((guideRequest) =>
+          guideRequest._id === updatedGuideRequest._id
+            ? updatedGuideRequest
+            : guideRequest
         )
       );
     } catch (err) {
@@ -88,9 +77,8 @@ export default function Adventures() {
 
   return (
     <div className="bg-white">
-      <Navbar />
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <Tabs defaultValue="overview" className="space-y-4">
+        <Tabs defaultValue="guide-requests" className="space-y-4">
           <TabsList>
             <Link href="/admin/adventures">
               <TabsTrigger value="manage-adventures">
@@ -156,44 +144,54 @@ export default function Adventures() {
                     </div>
                   ))}
                 </div>
-
-                <Button
-                  className="mt-2"
-                  variant="default"
-                  onClick={() => {
-                    handleGuideRequestApproval({
-                      id: guideRequest._id,
-                      status: "APPROVED",
-                    });
-                  }}
-                >
-                  Approve
-                </Button>
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button variant="destructive">Reject</Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogDescription>
-                        This action cannot be undone. Are you sure you want to
-                        reject this guide request.
-                      </DialogDescription>
-                      <Button
-                        className="mt-2"
-                        variant="destructive"
-                        onClick={() => {
-                          handleGuideRequestApproval({
-                            id: guideRequest._id,
-                            status: "REJECTED",
-                          });
-                        }}
-                      >
-                        Yes, Reject.
-                      </Button>
-                    </DialogHeader>
-                  </DialogContent>
-                </Dialog>
+                {}
+                {guideRequest.status === "PENDING" && (
+                  <>
+                    <Button
+                      className="mt-2"
+                      variant="default"
+                      onClick={() => {
+                        handleGuideRequestApproval({
+                          id: guideRequest._id,
+                          status: "APPROVED",
+                        });
+                      }}
+                    >
+                      Approve
+                    </Button>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button variant="destructive">Reject</Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogDescription>
+                            This action cannot be undone. Are you sure you want
+                            to reject this guide request.
+                          </DialogDescription>
+                          <Button
+                            className="mt-2"
+                            variant="destructive"
+                            onClick={() => {
+                              handleGuideRequestApproval({
+                                id: guideRequest._id,
+                                status: "REJECTED",
+                              });
+                            }}
+                          >
+                            Yes, Reject.
+                          </Button>
+                        </DialogHeader>
+                      </DialogContent>
+                    </Dialog>
+                  </>
+                )}
+                {guideRequest.status === "APPROVED" && (
+                  <span className="text-green-500">Approved</span>
+                )}
+                {guideRequest.status === "REJECTED" && (
+                  <span className="text-red-500">Rejected</span>
+                )}
               </CardContent>
             </Card>
           ))}
