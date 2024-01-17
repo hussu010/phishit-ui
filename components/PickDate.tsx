@@ -38,6 +38,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Guide } from "@/api/guide-requests";
+import { initPayment } from "@/api/booking";
 
 const bookingFormSchema = z.object({
   noOfPeople: z.string().min(1, "Number of people must be at least 1"),
@@ -102,15 +103,20 @@ export function PickDate({
       parseInt(data.noOfPeople),
       accessToken
     );
-    if (booking) {
+    if (!booking) {
       toast({
-        title: "Booking Successful",
-        description: "You have successfully booked the adventure",
+        title: "Booking Failed",
+        description: "Please try again later",
       });
-      console.log(booking);
 
-      route.push(`/booking/${booking._id}`);
+      return;
+    
     }
+
+
+    const res = await initPayment(accessToken, `http://localhost:3000/bookings/${booking._id}`, booking._id); 
+    
+    route.push(res.paymentUrl);
   };
 
   return (
@@ -235,7 +241,7 @@ export function PickDate({
               )}
             />
 
-            <Button type="submit">Submit</Button>
+            <Button type="submit">Pay through Khalti</Button>
           </form>
         </Form>
       )}

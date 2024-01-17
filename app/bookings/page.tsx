@@ -31,11 +31,11 @@ export default function Page() {
     <>
       <h1 className="text-2xl font-bold">All Your Packages</h1>
       <div className="grid md:grid-cols-4 grid-cols-2 gap-2">
-        {bookings.map((booking) => {
+        {bookings.filter(books => books.status == "CONFIRMED").map((booking) => {
           return (
             <Card key={booking._id}>
               <CardHeader>
-                <CardTitle>Package Name: {booking.package.title}</CardTitle>
+                <CardTitle>Package Name: {booking.package.title} { booking._id}</CardTitle>
                 <CardDescription>
                   Package id: {booking.package._id}
                 </CardDescription>

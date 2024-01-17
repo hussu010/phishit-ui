@@ -61,7 +61,7 @@ export async function initPayment(
       },
       body: JSON.stringify({
         method: "KHALTI",
-        redirectUrl: redirectUrl + "?payment=confirmed",
+        redirectUrl,
       }),
     });
     if (!res.ok) {

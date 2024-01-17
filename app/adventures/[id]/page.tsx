@@ -15,7 +15,6 @@ export default async function Page({
 
   return (
     <div className="absoulte bg-white">
-      <Navbar />
       <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:max-w-7xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 gap-4">
         {adventure.images.map((image, index) => (
           <div
