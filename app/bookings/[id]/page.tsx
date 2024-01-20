@@ -90,13 +90,19 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
           </Card>
         </div>
       ) : (
-        <div className="flex flex-col min-h-screen items-center justify-center">
+          <div className="flex flex-col min-h-screen items-center justify-center">
+            <h1 className="text-[26px] font-bold">Looks like your request is still pending</h1>
+            <p className="text-sm font-extralight">click confirm to verify</p>
           <fieldset className="flex flex-col gap-3 border border-[black] p-4">
               <legend>Confirm Payment</legend>
               <p>Your payment is no yet Verified</p>
             <Button onClick={confirmPayment} className="bg-green-400">Confirm</Button>
-            <Button variant={"destructive"}>Cancel</Button>
-          </fieldset>
+            <Button variant={"destructive"}><Link href="/">Cancel</Link></Button>
+            </fieldset>
+            <div className="flex gap-4 mt-3">
+              <Button><Link href="/bookings">View Your Bookings</Link></Button>
+              <Button><Link href="/adventures">Try Booking again</Link></Button>
+            </div>
         </div>
       )}
     </>
