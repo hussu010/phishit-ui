@@ -99,6 +99,8 @@ function LoginDialog() {
 
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
+      document.cookie = `accessToken=${accessToken}`;
+      document.cookie = `roles=${user.roles}`;
       setOpenOtpDialog(false);
       dispatch(
         loginSuccess({

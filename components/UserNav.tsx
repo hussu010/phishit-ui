@@ -20,14 +20,17 @@ import { RootState } from "@/redux/reducer";
 export default function UserNav() {
   const dispatch = useDispatch();
 
-  const { username, phoneNumber, googleId } = useSelector(
+  const { username, phoneNumber, googleId, roles } = useSelector(
     (state: RootState) => state.users
   );
-  console.log(username, phoneNumber, googleId);
+  console.log(username, phoneNumber, googleId, roles);
 
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
+    document.cookie =
+      "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie = "roles=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     dispatch(logout());
   };
 
