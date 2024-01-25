@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useRouter } from "next/navigation";
 
-function page() {
+function Page() {
   const [userDetail, setUserDetail] = useState<any>();
   const { accessToken } = useSelector((state: RootState) => state.auth);
   const route = useRouter();
@@ -118,4 +118,4 @@ function page() {
   );
 }
 
-export default page;
+export default Page;
