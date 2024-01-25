@@ -43,7 +43,11 @@ const AdventureCard: React.FC<AdventureCardProps> = ({
             {title}
             <Link href={`/adventures/${_id}`} className="absolute inset-0" />
           </h3>
-          <p className="mt-1 text-sm text-gray-500">{description}</p>
+          <p className="mt-1 text-sm text-gray-500">
+            {description.length > 200
+              ? `${description.substring(0, 200)}...`
+              : description}
+          </p>
         </div>
       </div>
     </div>
