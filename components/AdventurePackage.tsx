@@ -37,6 +37,7 @@ function AdventurePackage({
 
   function handlePackage(id: string) {
     if (!isAuthenticated) {
+      route.push("/adventures/error");
       throw new Error("You are not logged in");
     }
     const currentPackage = packages.find((adventurePackage) => {

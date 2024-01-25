@@ -15,8 +15,12 @@ export default function Error({
   }, [error]);
 
   return (
-    <div>
+    <div className="flex flex-col h-[70vh] gap-5 items-center justify-center">
       <h2>Something went wrong!</h2>
+      <ul>
+        <li>Check your internet connection</li>
+        <li>check if you are logged in or not</li>
+      </ul>
       <button
         onClick={
           // Attempt to recover by trying to re-render the segment

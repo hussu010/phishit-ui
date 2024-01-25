@@ -167,3 +167,43 @@ export const EnrollAdventure = async ({
     throw err;
   }
 };
+
+export const UnenrollAdventure = async({
+  adventureId,
+  accessToken,
+}: {
+  adventureId: string;
+  accessToken: string;
+}) => {
+  try {
+    const response = await fetch(
+      `${API_URL}/api/adventures/${adventureId}/unenroll`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+
+    
+    if (!response.ok) {
+      const data = await response.json();
+      if (
+        (response.status === 500 && data.message) ||
+        (response.status === 401 && data.message) ||
+        (response.status === 403 && data.message) ||
+        (response.status === 409 && data.message)
+        ) {
+          throw new Error(data.message);
+        } else {
+          throw new Error("Unknown error occurred");
+        }
+      }
+    return;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
