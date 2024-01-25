@@ -17,10 +17,12 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+
 import { PickDate } from "./PickDate";
 import ChangePackage from "./ChangePackage";
+import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/reducer";
 
 function AdventurePackage({
   packages,
@@ -28,10 +30,15 @@ function AdventurePackage({
 }: {
   packages: Package[];
   id: string;
-}) {
+  }) {
+  const route = useRouter();
   const [currentPackage, setCurrentPackage] = useState<Package>(packages[0]);
+  const {isAuthenticated} = useSelector((state: RootState) => state.auth);
 
   function handlePackage(id: string) {
+    if (!isAuthenticated) {
+      throw new Error("You are not logged in");
+    }
     const currentPackage = packages.find((adventurePackage) => {
       return adventurePackage._id === id;
     });

@@ -33,6 +33,7 @@ export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const { roles } = useSelector((state: RootState) => state.users);
 
   return (
     <header>
@@ -72,7 +73,15 @@ export default function Navbar() {
           ))}
         </div>
         <div className="hidden lg:flex lg:items-center lg:justify-end lg:flex-1 lg:gap-x-12">
-          {callsToAction.map((item) => (
+          
+          {isAuthenticated && roles.includes("GUIDE") ?
+            <Link href="/guide-dashboard"
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-gray-900 hover:bg-gray-800"
+            >
+              Guide Dashboard
+            </Link>
+            :
+            callsToAction.map((item) => (
             <a
               key={item.name}
               href={item.href}

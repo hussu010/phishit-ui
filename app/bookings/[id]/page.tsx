@@ -42,7 +42,9 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
 
   async function confirmPayment() {
     const response = await verifyPayment(accessToken, id);
-    route.refresh();
+    if (response.status == "CONFIRMED") {
+      route.push(`/bookings`);
+    }
   }
   return (
     <>

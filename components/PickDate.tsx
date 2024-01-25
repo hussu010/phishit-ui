@@ -110,12 +110,14 @@ export function PickDate({
       });
 
       return;
-    
     }
 
+    const res = await initPayment(
+      accessToken,
+      `https://phishit-ui-dev.tnbswap.com/bookings/${booking._id}`,
+      booking._id
+    );
 
-    const res = await initPayment(accessToken, `http://localhost:3000/bookings/${booking._id}`, booking._id); 
-    
     route.push(res.paymentUrl);
   };
 
