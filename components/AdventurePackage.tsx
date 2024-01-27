@@ -104,6 +104,9 @@ function AdventurePackage({
               </Dialog>
             ) : (
               <LoginDialog buttonText="Book" />
+
+                
+                
             )}
           </div>
         </div>

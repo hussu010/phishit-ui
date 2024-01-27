@@ -8,7 +8,7 @@ export interface UserProfile {
   gender: "MALE" | "FEMALE" | "OTHER"; // Assuming gender is one of these options
   dateOfBirth: string;
   bio: string;
-  avatarUrl: string;
+  avatar: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -60,7 +60,7 @@ export const profile = async (token: string) => {
       ) {
         throw new Error(data.message);
       } else {
-        throw new Error("Unknown error occurred");
+        return {};
       }
     }
 
@@ -69,4 +69,35 @@ export const profile = async (token: string) => {
     console.error("Error getting current user:", error);
     throw error;
   }
-}
+};
+
+export const updateProfile = async (token: string, profile: any) => {
+  try {
+    const response = await fetch(`${API_URL}/api/profiles`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(profile),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      if (
+        (response.status === 500 || response.status === 401) &&
+        data.message
+      ) {
+        throw new Error(data.message);
+      } else {
+        return {};
+      }
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Error getting current user:", error);
+    throw error;
+  }
+};

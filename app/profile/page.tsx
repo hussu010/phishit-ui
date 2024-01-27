@@ -1,6 +1,10 @@
 "use client";
-import { Adventure, UnenrollAdventure } from "@/api/adventures";
-import { UserProfile, getMe, profile } from "@/api/users";
+import {
+  Adventure,
+  UnenrollAdventure,
+  updateAdventure,
+} from "@/api/adventures";
+import { UserProfile, getMe, profile, updateProfile } from "@/api/users";
 import { RootState } from "@/redux/reducer";
 import Image from "next/image";
 import Link from "next/link";
@@ -18,7 +22,58 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Textarea } from "@/components/ui/textarea";
+
+const formSchema = z.object({
+  fullName: z.string(),
+  email: z.string().email(),
+  gender: z.enum(["MALE", "FEMALE", "OTHER"]),
+  dateOfBirth: z.string().refine((date) => /^\d{4}-\d{2}-\d{2}$/.test(date), {
+    message: "Invalid date format. Please use YYYY-MM-DD.",
+  }),
+  bio: z.string(),
+});
+
 function Page() {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      fullName: "",
+      email: "",
+      gender: "MALE",
+      dateOfBirth: "",
+      bio: "",
+    },
+  });
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const { fullName, email, gender, dateOfBirth, bio } = values;
+    const res = await updateProfile(accessToken, {
+      fullName,
+      email,
+      gender,
+      dateOfBirth,
+      bio,
+    });
+    console.log(values);
+    setUserDetail(res);
+    setIsEditing(false);
+  }
+
   const [userDetail, setUserDetail] = useState<UserProfile>();
   const [enrollAdventure, setEnrollAdventure] = useState<Adventure[]>([]); // [adventureId
   const { accessToken } = useSelector((state: RootState) => state.auth);
@@ -31,11 +86,12 @@ function Page() {
 
   async function getUserDetail(accessToken: string) {
     const response = await profile(accessToken);
+    if (!response) return;
     setUserDetail(response);
   }
 
   useEffect(() => {
-    // getUserDetail(accessToken);
+    getUserDetail(accessToken);
     getEnrolledAventure(accessToken);
   }, []);
 
@@ -46,10 +102,127 @@ function Page() {
   console.log(userDetail);
 
   // State to manage user data
-  const [isEditing, setIsEditing] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
 
   return (
     <>
+      {isEditing ? (
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-8 px-[50px]"
+          >
+            <FormField
+              control={form.control}
+              name="fullName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Username</FormLabel>
+                  <FormControl>
+                    <Input placeholder="shadcn" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    This is your public display name.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input placeholder="email@example.com" {...field} />
+                  </FormControl>
+                  <FormDescription>This is your email address.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="dateOfBirth"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Date of Birth</FormLabel>
+                  <FormControl>
+                    <Input placeholder="1990-01-01" {...field} />
+                  </FormControl>
+                  <FormDescription>This is your date of birth.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="gender"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Gender</FormLabel>
+                  <FormControl>
+                    <select {...field}>
+                      <option value="MALE">Male</option>
+                      <option value="FEMALE">Female</option>
+                      <option value="OTHER">Other</option>
+                    </select>
+                  </FormControl>
+                  <FormDescription>Please select your gender.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="bio"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Bio</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="Bio" {...field} />
+                  </FormControl>
+                  <FormDescription>This is your bio.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <Button type="submit">Submit</Button>
+          </form>
+        </Form>
+      ) : (
+        <div className="user-card border flex flex-col gap-5 p-3">
+          <div>
+            {userDetail && (
+              <Image
+                src={userDetail.avatar}
+                alt="avatar"
+                width={50}
+                height={50}
+              />
+            )}
+          </div>
+          <div>
+            <strong>Full Name:</strong> {userDetail?.fullName || ""}
+          </div>
+          <div>
+            <strong>Email:</strong> {userDetail?.email || ""}
+          </div>
+          <div>
+            <strong>Gender:</strong> {userDetail?.gender || ""}
+          </div>
+          <div>
+            <strong>Date of Birth:</strong> {userDetail?.dateOfBirth || ""}
+          </div>
+          <div>
+            <strong>Bio:</strong> {userDetail?.bio || ""}
+          </div>
+          <Button onClick={() => setIsEditing(true)}>Edit</Button>
+        </div>
+      )}
+
       {roles.includes("GUIDE") && (
         <>
           <h1 className="text-[40px] font-bold">Enrolled Adventures:</h1>

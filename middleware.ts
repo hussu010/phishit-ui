@@ -6,7 +6,7 @@ export default async function middleware(req: NextRequest) {
   const cookieStore = cookies();
 
   const adminRoutes = ["/admin/guide-requests", "/admin/adventures"];
-  const protectedRoutes = ["/guide-requests", "/adventures"];
+  const protectedRoutes = ["/guide-requests", "/adventures, /profile"];
 
   const isAuthenticated = !!cookieStore.get("accessToken");
   const roles = cookieStore.get("roles")?.value.split(",") || [];
@@ -26,5 +26,5 @@ export default async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/admin/:path*", "/guide-requests", "/adventures/:path"],
+  matcher: ["/", "/admin/:path*", "/guide-requests", "/adventures/:path", "/profile"],
 };
