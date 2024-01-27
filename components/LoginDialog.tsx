@@ -27,7 +27,7 @@ import { getMe } from "@/api/users";
 import { loginSuccess } from "@/redux/features/auth-slice";
 import { setUser } from "@/redux/features/users-slice";
 
-function LoginDialog() {
+function LoginDialog({buttonText}:{buttonText?:string}) {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [otpCode, setOtpCode] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -139,7 +139,7 @@ function LoginDialog() {
       <DialogShadCn open={openPhoneDialog} onOpenChange={setOpenPhoneDialog}>
         <DialogTrigger>
           <div className="text-sm font-semibold leading-6 text-gray-900">
-            Login
+            {buttonText ? buttonText : "Login"}
           </div>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">

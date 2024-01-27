@@ -23,23 +23,20 @@ import ChangePackage from "./ChangePackage";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/reducer";
-
+import { useDispatch } from "react-redux";
+import LoginDialog from "./LoginDialog";
 function AdventurePackage({
   packages,
   id,
 }: {
   packages: Package[];
   id: string;
-  }) {
+}) {
   const route = useRouter();
   const [currentPackage, setCurrentPackage] = useState<Package>(packages[0]);
-  const {isAuthenticated} = useSelector((state: RootState) => state.auth);
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
 
   function handlePackage(id: string) {
-    if (!isAuthenticated) {
-      route.push("/adventures/error");
-      throw new Error("You are not logged in");
-    }
     const currentPackage = packages.find((adventurePackage) => {
       return adventurePackage._id === id;
     });
@@ -71,39 +68,43 @@ function AdventurePackage({
             Duration: {adventurePackage.duration} days
           </p>
           <div className="flex justify-end my-2">
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button onClick={() => handlePackage(adventurePackage._id)}>
-                  Book
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle>Start Your Adventure</DialogTitle>
-                  <DialogDescription>
-                    Select your preferred date and package and more...
-                  </DialogDescription>
-                </DialogHeader>
-                <PickDate id={id} currentPackage={currentPackage} />
-                <DialogFooter>
-                  <HoverCard>
-                    <HoverCardTrigger className="cursor-pointer underline">
-                      @selected package
-                    </HoverCardTrigger>
-                    <HoverCardContent>
-                      <h1 className="font-bold">{currentPackage.title}</h1>
-                      <p>{currentPackage.description}</p>
-                      <p>Duration: {currentPackage.duration} days</p>
-                      <p>Price: Rs. {currentPackage.price}</p>
-                    </HoverCardContent>
-                  </HoverCard>
-                  <ChangePackage
-                    packages={packages}
-                    handlePackage={handlePackage}
-                  />
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
+            {isAuthenticated ? (
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button onClick={() => handlePackage(adventurePackage._id)}>
+                    Book
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle>Start Your Adventure</DialogTitle>
+                    <DialogDescription>
+                      Select your preferred date and package and more...
+                    </DialogDescription>
+                  </DialogHeader>
+                  <PickDate id={id} currentPackage={currentPackage} />
+                  <DialogFooter>
+                    <HoverCard>
+                      <HoverCardTrigger className="cursor-pointer underline">
+                        @selected package
+                      </HoverCardTrigger>
+                      <HoverCardContent>
+                        <h1 className="font-bold">{currentPackage.title}</h1>
+                        <p>{currentPackage.description}</p>
+                        <p>Duration: {currentPackage.duration} days</p>
+                        <p>Price: Rs. {currentPackage.price}</p>
+                      </HoverCardContent>
+                    </HoverCard>
+                    <ChangePackage
+                      packages={packages}
+                      handlePackage={handlePackage}
+                    />
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            ) : (
+              <LoginDialog buttonText="Book" />
+            )}
           </div>
         </div>
       ))}
