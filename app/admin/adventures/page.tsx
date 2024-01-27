@@ -26,6 +26,9 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { RootState } from "@/redux/reducer";
+import EditAdventure from "@/components/EditAdventure";
+import { Adventure } from "@/api/adventures";
+import CreateAdventure from "@/components/CreateAdventure";
 
 const getAdventures = async () => {
   const res = await fetch(`${API_URL}/api/adventures`);
@@ -38,7 +41,7 @@ const getAdventures = async () => {
 };
 
 export default function Adventures() {
-  const [adventures, setAdventures] = useState<AdventureCardProps[]>([]);
+  const [adventures, setAdventures] = useState<Adventure[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const { accessToken } = useSelector((state: RootState) => state.auth);
@@ -97,7 +100,7 @@ export default function Adventures() {
       </div>
       <div className="text-center my-6">
         <Button className="mt-2" variant="default">
-          Create New Adventure
+          <CreateAdventure />
         </Button>
       </div>
 
@@ -116,9 +119,7 @@ export default function Adventures() {
                 width={480}
                 height={640}
               />
-              <Button className="mt-2" variant="outline">
-                Edit
-              </Button>
+              <EditAdventure adventure={adventure} />
               <Dialog>
                 <DialogTrigger asChild>
                   <Button variant="destructive">Delete</Button>

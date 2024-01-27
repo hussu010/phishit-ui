@@ -168,7 +168,7 @@ export const EnrollAdventure = async ({
   }
 };
 
-export const UnenrollAdventure = async({
+export const UnenrollAdventure = async ({
   adventureId,
   accessToken,
 }: {
@@ -187,7 +187,6 @@ export const UnenrollAdventure = async({
       }
     );
 
-    
     if (!response.ok) {
       const data = await response.json();
       if (
@@ -195,15 +194,90 @@ export const UnenrollAdventure = async({
         (response.status === 401 && data.message) ||
         (response.status === 403 && data.message) ||
         (response.status === 409 && data.message)
-        ) {
-          throw new Error(data.message);
-        } else {
-          throw new Error("Unknown error occurred");
-        }
+      ) {
+        throw new Error(data.message);
+      } else {
+        throw new Error("Unknown error occurred");
       }
+    }
     return;
   } catch (err) {
     console.log(err);
     throw err;
   }
-}
+};
+
+export const updateAdventure = async ({
+  adventureId,
+  accessToken,
+  adventure,
+}: {
+  adventureId: string;
+  accessToken: string;
+  adventure: Adventure;
+}) => {
+  try {
+    const response = await fetch(`${API_URL}/api/adventures/${adventureId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify(adventure),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      if (
+        (response.status === 500 && data.message) ||
+        (response.status === 401 && data.message) ||
+        (response.status === 403 && data.message) ||
+        (response.status === 409 && data.message)
+      ) {
+        throw new Error(data.message);
+      } else {
+        throw new Error("Unknown error occurred");
+      }
+    }
+    return data;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};
+
+export const createNewAdventure = async (
+  accessToken: string,
+  adventure: any
+) => {
+  try {
+    const response = await fetch(`${API_URL}/api/adventures`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify(adventure),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      if (
+        (response.status === 500 && data.message) ||
+        (response.status === 401 && data.message) ||
+        (response.status === 403 && data.message) ||
+        (response.status === 409 && data.message)
+      ) {
+        throw new Error(data.message);
+      } else {
+        throw new Error("Unknown error occurred");
+      }
+    }
+    return data;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};
