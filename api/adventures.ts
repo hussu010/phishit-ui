@@ -147,9 +147,9 @@ export const EnrollAdventure = async ({
       }
     );
 
-    const data = await response.json();
-
     if (!response.ok) {
+      const data = await response.json();
+
       if (
         (response.status === 500 && data.message) ||
         (response.status === 401 && data.message) ||
@@ -161,7 +161,6 @@ export const EnrollAdventure = async ({
         throw new Error("Unknown error occurred");
       }
     }
-    return data;
   } catch (err) {
     console.log(err);
     throw err;

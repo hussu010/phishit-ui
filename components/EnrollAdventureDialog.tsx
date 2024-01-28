@@ -22,7 +22,7 @@ export default function EnrollAdventureDialog({ id }: { id: string }) {
 
   const handleEnroll = async () => {
     try {
-      const res = await EnrollAdventure({
+      await EnrollAdventure({
         adventureId: id,
         accessToken,
       });
