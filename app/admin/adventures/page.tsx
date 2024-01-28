@@ -99,9 +99,7 @@ export default function Adventures() {
         </Tabs>
       </div>
       <div className="text-center my-6">
-        <Button className="mt-2" variant="default">
-          <CreateAdventure />
-        </Button>
+        <CreateAdventure />
       </div>
 
       <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4 md:p-6">

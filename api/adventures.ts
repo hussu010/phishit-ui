@@ -206,15 +206,7 @@ export const UnenrollAdventure = async ({
   }
 };
 
-export const updateAdventure = async ({
-  adventureId,
-  accessToken,
-  adventure,
-}: {
-  adventureId: string;
-  accessToken: string;
-  adventure: Adventure;
-}) => {
+export const updateAdventure = async (accessToken:string, adventureId:string, adventure:any) => {
   try {
     const response = await fetch(`${API_URL}/api/adventures/${adventureId}`, {
       method: "PUT",
