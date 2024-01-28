@@ -13,10 +13,9 @@ import Link from "next/link";
 import Image from "next/image";
 
 const navigation = [
-  { name: "Product", href: "#" },
-  { name: "Features", href: "#" },
-  { name: "Marketplace", href: "#" },
-  { name: "Company", href: "#" },
+  { name: "About", href: "#" },
+  { name: "Contact", href: "#" },
+  { name: "FAQ", href: "#" },
 ];
 
 interface CallToAction {
@@ -73,24 +72,25 @@ export default function Navbar() {
           ))}
         </div>
         <div className="hidden lg:flex lg:items-center lg:justify-end lg:flex-1 lg:gap-x-12">
-          
-          {isAuthenticated && roles.includes("GUIDE") ?
-            <Link href="/guide-dashboard"
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-gray-900 hover:bg-gray-800"
+          {isAuthenticated && roles.includes("GUIDE") ? (
+            <Link
+              href="/guide-dashboard"
+              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-gray-900 hover:bg-gray-800"
             >
               Guide Dashboard
             </Link>
-            :
+          ) : (
             callsToAction.map((item) => (
-            <a
-              key={item.name}
-              href={item.href}
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-gray-900 hover:bg-gray-800"
-            >
-              <item.icon className="mr-2 h-5 w-5" aria-hidden="true" />
-              {item.name}
-            </a>
-          ))}
+              <a
+                key={item.name}
+                href={item.href}
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-gray-900 hover:bg-gray-800"
+              >
+                <item.icon className="mr-2 h-5 w-5" aria-hidden="true" />
+                {item.name}
+              </a>
+            ))
+          )}
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           {isAuthenticated ? <UserNav /> : <LoginDialog />}
