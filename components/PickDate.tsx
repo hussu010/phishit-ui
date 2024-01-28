@@ -114,7 +114,7 @@ export function PickDate({
 
     const res = await initPayment(
       accessToken,
-      `https://phishit-ui-dev.tnbswap.com/bookings/${booking._id}`,
+      `${window.location.protocol}/${window.location.host}/bookings/${booking._id}`,
       booking._id
     );
 
