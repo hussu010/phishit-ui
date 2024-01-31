@@ -114,7 +114,7 @@ export function PickDate({
 
     const res = await initPayment(
       accessToken,
-      `${window.location.protocol}/${window.location.host}/bookings/${booking._id}`,
+      `${window.location.protocol}//${window.location.host}/bookings/${booking._id}`,
       booking._id
     );
 
@@ -217,7 +217,10 @@ export function PickDate({
                             key={guide._id}
                           >
                             <FormControl>
-                              <RadioGroupItem value={guide._id} />
+                              <RadioGroupItem
+                                value={guide._id}
+                                disabled={!guide.isAvailable}
+                              />
                             </FormControl>
                             <FormLabel className="font-normal">
                               {guide.username}{" "}

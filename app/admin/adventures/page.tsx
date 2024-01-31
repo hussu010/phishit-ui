@@ -29,6 +29,7 @@ import { RootState } from "@/redux/reducer";
 import EditAdventure from "@/components/EditAdventure";
 import { Adventure } from "@/api/adventures";
 import CreateAdventure from "@/components/CreateAdventure";
+import AdminManagePackage from "@/components/AdminManagePackage";
 
 const getAdventures = async () => {
   const res = await fetch(`${API_URL}/api/adventures`);
@@ -102,7 +103,7 @@ export default function Adventures() {
         <CreateAdventure />
       </div>
 
-      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4 md:p-6">
+      <section className="p-4 md:p-6">
         {adventures.map((adventure) => (
           <Card key={adventure._id}>
             <CardHeader>
@@ -117,41 +118,43 @@ export default function Adventures() {
                 width={480}
                 height={640}
               />
-              <EditAdventure adventure={adventure} />
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button variant="destructive">Delete</Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Are you sure absolutely sure?</DialogTitle>
-                    {errorMessage && (
-                      <div className="text-red-500 mt-2">{errorMessage}</div>
-                    )}
-                    <DialogDescription>
-                      This action cannot be undone. This will permanently delete
-                      the adventure.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <Button
-                    className="mt-2"
-                    variant="destructive"
-                    onClick={() => {
-                      handleDelete(adventure._id);
-                    }}
-                  >
-                    Delete
-                  </Button>
-                </DialogContent>
-              </Dialog>
-
-              <Link
-                href={`/adventures/${adventure._id}`}
-                target="_blank"
-                className={buttonVariants({ variant: "default" })}
-              >
-                View
-              </Link>
+              <div className="flex items-center gap-4">
+                <EditAdventure adventure={adventure} />
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="destructive">Delete</Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Are you sure absolutely sure?</DialogTitle>
+                      {errorMessage && (
+                        <div className="text-red-500 mt-2">{errorMessage}</div>
+                      )}
+                      <DialogDescription>
+                        This action cannot be undone. This will permanently
+                        delete the adventure.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <Button
+                      className="mt-2"
+                      variant="destructive"
+                      onClick={() => {
+                        handleDelete(adventure._id);
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  </DialogContent>
+                </Dialog>
+                <AdminManagePackage adventureId={adventure._id} />
+                <Link
+                  href={`/adventures/${adventure._id}`}
+                  target="_blank"
+                  className={buttonVariants({ variant: "default" })}
+                >
+                  View
+                </Link>
+              </div>
             </CardContent>
           </Card>
         ))}

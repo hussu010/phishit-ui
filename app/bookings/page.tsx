@@ -43,21 +43,22 @@ export default function Page() {
               .filter((books) => books.status == "CONFIRMED")
               .map((booking) => {
                 return (
-                  <Card key={booking._id}>
+                  <Card
+                    key={booking._id}
+                    className="flex flex-col gap-3 w-[400px]"
+                  >
                     <CardHeader>
-                      <CardTitle>
-                        Package Name: {booking.package.title}
-                      </CardTitle>
-                      <CardDescription>
-                        Package id: {booking.package._id}
+                      <CardTitle>{booking.package.title}</CardTitle>
+                      <CardDescription className=" line-clamp-4">
+                        {booking.package.description}
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <p>Guide Name:</p>
+                      <p>Price: Rs.{booking.package.price}</p>
+                      <p>Duration: {booking.package.duration}days</p>
+                      <p>Guide Name: {booking.guide.username}</p>
                     </CardContent>
-                    <CardFooter>
-                      <p>Card Footer</p>
-                    </CardFooter>
+                    <CardFooter>Thanks for booking with us</CardFooter>
                   </Card>
                 );
               })}
@@ -69,17 +70,20 @@ export default function Page() {
               .filter((books) => books.status == "PENDING")
               .map((booking) => {
                 return (
-                  <Card key={booking._id}>
+                  <Card
+                    key={booking._id}
+                    className="flex flex-col gap-3 w-[400px]"
+                  >
                     <CardHeader>
-                      <CardTitle>
-                        Package Name: {booking.package.title}
-                      </CardTitle>
-                      <CardDescription>
-                        Package id: {booking.package._id}
+                      <CardTitle>{booking.package.title}</CardTitle>
+                      <CardDescription className=" line-clamp-4">
+                        {booking.package.description}
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <p>Guide Name:</p>
+                      <p>Price: Rs.{booking.package.price}</p>
+                      <p>Duration: {booking.package.duration}days</p>
+                      <p>Guide Name: {booking.guide.username}</p>
                     </CardContent>
                     <CardFooter>
                       <Button>

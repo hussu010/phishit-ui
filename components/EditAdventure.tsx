@@ -172,8 +172,8 @@ function EditAdventure({ adventure }: { adventure: Adventure }) {
 
   return (
     <Dialog>
-      <DialogTrigger>
-        <Button>Edit</Button>
+      <DialogTrigger className="bg-black text-white py-2 px-4 rounded-md">
+        Edit
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
