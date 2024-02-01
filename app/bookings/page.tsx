@@ -1,5 +1,5 @@
 "use client";
-import { Booking, getBookings } from "@/api/booking";
+import { Booking, getBookings, initPayment } from "@/api/booking";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,7 +21,7 @@ export default function Page() {
   const { accessToken } = useSelector((state: RootState) => state.auth);
   const [bookings, setBookings] = React.useState<Booking[]>([]);
   console.log(accessToken);
-  const router = useRouter();
+  const route = useRouter();
   useEffect(() => {
     async function getAllBookings(accessToken: string) {
       const packages = await getBookings(accessToken);
@@ -29,6 +29,15 @@ export default function Page() {
     }
     getAllBookings(accessToken);
   }, []);
+  async function handlePay(bookingId: string) {
+    const res = await initPayment(
+      accessToken,
+      `${window.location.protocol}//${window.location.host}/bookings/${bookingId}`,
+      bookingId
+    );
+
+    route.push(res.paymentUrl);
+  }
   console.log(bookings);
   return (
     <>
@@ -36,9 +45,10 @@ export default function Page() {
         <TabsList>
           <TabsTrigger value="CONFIRMED">CONFIRMED BOOKINGS</TabsTrigger>
           <TabsTrigger value="PENDING">PENDING BOOKINGS</TabsTrigger>
+          <TabsTrigger value="EXPIRED">PAYMENT EXPIRED</TabsTrigger>
         </TabsList>
         <TabsContent value="CONFIRMED">
-          <div className="grid md:grid-cols-4 grid-cols-2 gap-2">
+          <div className="flex gap-5 flex-wrap justify-center">
             {bookings
               .filter((books) => books.status == "CONFIRMED")
               .map((booking) => {
@@ -65,9 +75,9 @@ export default function Page() {
           </div>
         </TabsContent>
         <TabsContent value="PENDING">
-          <div className="grid md:grid-cols-4 grid-cols-2 gap-2">
+          <div className="flex gap-5 flex-wrap justify-center">
             {bookings
-              .filter((books) => books.status == "PENDING")
+              .filter((books) => books.payment?.status == "PENDING")
               .map((booking) => {
                 return (
                   <Card
@@ -90,6 +100,37 @@ export default function Page() {
                         <Link href={`/bookings/${booking._id}`}>
                           Confirm Payment
                         </Link>
+                      </Button>
+                    </CardFooter>
+                  </Card>
+                );
+              })}
+          </div>
+        </TabsContent>
+        <TabsContent value="EXPIRED">
+          <div className="flex gap-5 flex-wrap justify-center">
+            {bookings
+              .filter((books) => books.payment?.status == "EXPIRED")
+              .map((booking) => {
+                return (
+                  <Card
+                    key={booking._id}
+                    className="flex flex-col gap-3 w-[400px]"
+                  >
+                    <CardHeader>
+                      <CardTitle>{booking.package.title}</CardTitle>
+                      <CardDescription className=" line-clamp-4">
+                        {booking.package.description}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <p>Price: Rs.{booking.package.price}</p>
+                      <p>Duration: {booking.package.duration}days</p>
+                      <p>Guide Name: {booking.guide.username}</p>
+                    </CardContent>
+                    <CardFooter>
+                      <Button onClick={() => handlePay(booking._id)}>
+                        Pay Through Khalti
                       </Button>
                     </CardFooter>
                   </Card>

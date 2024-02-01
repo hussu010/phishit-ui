@@ -29,10 +29,12 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
 
   const { accessToken } = useSelector((state: RootState) => state.auth);
   const [booking, setBooking] = useState<Booking>();
+  const [message, setMessage] = useState<string>("");
 
   useEffect(() => {
     async function getBooking(accessToken: string, bookId: string) {
       const book = await getBookingById(accessToken, bookId);
+
       setBooking(book);
       console.log(book);
     }
@@ -41,10 +43,25 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
 
   async function confirmPayment() {
     const response = await verifyPayment(accessToken, id);
+    if (!response.status) {
+      setMessage(response.message);
+      return;
+    }
     if (response.status == "CONFIRMED") {
       route.push(`/bookings`);
+    } else {
     }
   }
+  async function handlePay() {
+    const res = await initPayment(
+      accessToken,
+      `${window.location.protocol}//${window.location.host}/bookings/${id}`,
+      id
+    );
+
+    route.push(res.paymentUrl);
+  }
+
   return (
     <>
       {booking?.status == "CONFIRMED" ? (
@@ -100,13 +117,24 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
           <p className="text-sm font-extralight">click confirm to verify</p>
           <fieldset className="flex flex-col gap-4 border border-[black] p-4 w-[500px]">
             <legend>Confirm Payment</legend>
-            <p>Your payment is no yet Verified</p>
-            <Button onClick={confirmPayment} className="bg-green-400">
-              Confirm
-            </Button>
-            <Button variant={"destructive"}>
-              <Link href="/">Cancel</Link>
-            </Button>
+            {message && <p className="text-red-500">{message}</p>}
+            {booking?.payment?.status == "EXPIRED" ||
+            message == "Payment expired" ? (
+              <>
+                <p>Payment session is expires</p>
+                <Button onClick={handlePay}>Pay through Khalti</Button>
+              </>
+            ) : (
+              <>
+                <p>Your payment is no yet Verified</p>
+                <Button onClick={confirmPayment} className="bg-green-400">
+                  Confirm
+                </Button>
+                <Button variant={"destructive"}>
+                  <Link href="/">Cancel</Link>
+                </Button>
+              </>
+            )}
           </fieldset>
           <div className="flex gap-4 mt-3">
             <Button>

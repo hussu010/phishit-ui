@@ -1,6 +1,19 @@
 import { API_URL } from "@/config/constants";
 import { Package } from "./adventures";
 import { Guide } from "./guide-requests";
+
+interface PaymentDetails {
+  amount: number;
+  createdAt: string;
+  expiresAt: string;
+  method: string;
+  paymentUrl: string;
+  pidx: string;
+  status: string;
+  updatedAt: string;
+  _id: string;
+}
+
 export interface Booking {
   _id: string;
   adventure: string;
@@ -11,6 +24,7 @@ export interface Booking {
   status: string;
   createdAt: string;
   updatedAt: string;
+  payment?: PaymentDetails;
 }
 
 export async function getBookings(accessToken: string) {
