@@ -4,7 +4,14 @@ import {
   UnenrollAdventure,
   updateAdventure,
 } from "@/api/adventures";
-import { UserProfile, getMe, profile, updateProfile } from "@/api/users";
+import {
+  UserMe,
+  UserProfile,
+  getMe,
+  profile,
+  updateAvailableStatus,
+  updateProfile,
+} from "@/api/users";
 import { RootState } from "@/redux/reducer";
 import Image from "next/image";
 import Link from "next/link";
@@ -37,6 +44,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
 
 const formSchema = z.object({
   fullName: z.string(),
@@ -75,13 +83,13 @@ function Page() {
   }
 
   const [userDetail, setUserDetail] = useState<UserProfile>();
-  const [enrollAdventure, setEnrollAdventure] = useState<Adventure[]>([]); // [adventureId
+  const [enrollAdventure, setEnrollAdventure] = useState<UserMe>();
   const { accessToken } = useSelector((state: RootState) => state.auth);
   const { roles } = useSelector((state: RootState) => state.users);
 
   async function getEnrolledAventure(accessToken: string) {
     const response = await getMe(accessToken);
-    setEnrollAdventure(response.adventures);
+    setEnrollAdventure(response);
   }
 
   async function getUserDetail(accessToken: string) {
@@ -99,8 +107,14 @@ function Page() {
     await UnenrollAdventure({ adventureId: id, accessToken: accessToken });
     getEnrolledAventure(accessToken);
   }
-  console.log(userDetail);
 
+  async function changeAvailble() {
+    const response = await updateAvailableStatus(
+      accessToken,
+      !enrollAdventure?.isAvailable
+    );
+    getEnrolledAventure(accessToken);
+  }
   // State to manage user data
   const [isEditing, setIsEditing] = useState(false);
 
@@ -224,10 +238,30 @@ function Page() {
       )}
 
       {roles.includes("GUIDE") && (
-        <>
-          <h1 className="text-[40px] font-bold">Enrolled Adventures:</h1>
+        <div className="p-5">
+          <h1 className="text-[40px] font-bold">Your Guide Details:</h1>
+
+          <div className="flex flex-col  justify-between">
+            <h1 className=" text-[26px] font-bold">
+              Change your Availibility status
+            </h1>
+            <p>people can&apos;t hire you when you are unavailable</p>
+            <span
+              className={`text-sm ${
+                enrollAdventure?.isAvailable ? "text-green-500" : "text-red-500"
+              }`}
+            >
+              {enrollAdventure?.isAvailable ? "available" : "not avaibale"}
+            </span>
+            <Switch
+              checked={enrollAdventure?.isAvailable}
+              onCheckedChange={changeAvailble}
+            />
+          </div>
+
+          <h1 className="text-[26px] font-bold mt-3">Enrolled Adventures:</h1>
           <div className="grid md:grid-cols-2 grid-cols-1 gap-2 p-6 w-full">
-            {enrollAdventure.map((adventure) => {
+            {enrollAdventure?.adventures.map((adventure) => {
               return (
                 <Card className="w-[500px]" key={adventure._id}>
                   <Image
@@ -257,7 +291,7 @@ function Page() {
               );
             })}
           </div>
-        </>
+        </div>
       )}
     </>
   );
