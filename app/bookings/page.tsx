@@ -72,9 +72,12 @@ export default function Page() {
                     </CardContent>
                     <CardFooter className="flex flex-col gap-3">
                       Thanks for booking with us
-                      <PDFDownloadLink document={<Pdf />} fileName="test.pdf">
+                      <PDFDownloadLink
+                        document={<Pdf bookingDetail={booking} />}
+                        fileName="test.pdf"
+                      >
                         {({ blob, url, loading, error }) =>
-                          loading ? "Loading document..." : "Download now!"
+                          loading ? "Loading document..." : "Download invoice!"
                         }
                       </PDFDownloadLink>
                     </CardFooter>
@@ -110,11 +113,6 @@ export default function Page() {
                           Confirm Payment
                         </Link>
                       </Button>
-                      <PDFDownloadLink document={<Pdf />} fileName="phisit.pdf">
-                        {({ loading }) =>
-                          loading ? "Loading document..." : "Download now!"
-                        }
-                      </PDFDownloadLink>
                     </CardFooter>
                   </Card>
                 );
