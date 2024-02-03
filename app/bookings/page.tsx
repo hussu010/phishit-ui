@@ -1,6 +1,7 @@
 "use client";
 import { Booking, getBookings, initPayment } from "@/api/booking";
 import Navbar from "@/components/Navbar";
+import Pdf from "@/components/Pdf";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,6 +13,7 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RootState } from "@/redux/reducer";
+import { PDFDownloadLink } from "@react-pdf/renderer";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
@@ -68,7 +70,14 @@ export default function Page() {
                       <p>Duration: {booking.package.duration}days</p>
                       <p>Guide Name: {booking.guide.username}</p>
                     </CardContent>
-                    <CardFooter>Thanks for booking with us</CardFooter>
+                    <CardFooter className="flex flex-col gap-3">
+                      Thanks for booking with us
+                      <PDFDownloadLink document={<Pdf />} fileName="test.pdf">
+                        {({ blob, url, loading, error }) =>
+                          loading ? "Loading document..." : "Download now!"
+                        }
+                      </PDFDownloadLink>
+                    </CardFooter>
                   </Card>
                 );
               })}
@@ -101,6 +110,11 @@ export default function Page() {
                           Confirm Payment
                         </Link>
                       </Button>
+                      <PDFDownloadLink document={<Pdf />} fileName="phisit.pdf">
+                        {({ loading }) =>
+                          loading ? "Loading document..." : "Download now!"
+                        }
+                      </PDFDownloadLink>
                     </CardFooter>
                   </Card>
                 );
