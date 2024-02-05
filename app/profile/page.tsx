@@ -117,7 +117,7 @@ function Page() {
   }
   // State to manage user data
   const [isEditing, setIsEditing] = useState(false);
-
+  console.log(enrollAdventure);
   return (
     <>
       {isEditing ? (

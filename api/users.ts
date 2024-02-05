@@ -150,3 +150,27 @@ export const updateAvailableStatus = async (token: string, status: boolean) => {
     throw error;
   }
 };
+
+export const getUserByName = async (username: string) => {
+  try {
+    const response = await fetch(`${API_URL}/api/users/${username}`);
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      if (
+        (response.status === 500 || response.status === 401) &&
+        data.message
+      ) {
+        throw new Error(data.message);
+      } else {
+        return {};
+      }
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Error getting current user:", error);
+    throw error;
+  }
+};
