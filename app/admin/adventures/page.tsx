@@ -103,12 +103,14 @@ export default function Adventures() {
         <CreateAdventure />
       </div>
 
-      <section className="p-4 md:p-6">
+      <section className="p-4 md:p-6  grid grid-cols-1 gap-2 md:grid-cols-3">
         {adventures.map((adventure) => (
           <Card key={adventure._id}>
             <CardHeader>
               <CardTitle>{adventure.title}</CardTitle>
-              <CardDescription>{adventure.description}</CardDescription>
+              <CardDescription className=" line-clamp-5">
+                {adventure.description}
+              </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col space-y-2">
               <Image
