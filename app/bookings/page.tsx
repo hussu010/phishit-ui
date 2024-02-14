@@ -1,5 +1,5 @@
 "use client";
-import { Booking, getBookings, initPayment } from "@/api/booking";
+import { Booking, cancelBooking, getBookings, initPayment } from "@/api/booking";
 import Navbar from "@/components/Navbar";
 import Pdf from "@/components/Pdf";
 import { Button } from "@/components/ui/button";
@@ -39,6 +39,11 @@ export default function Page() {
     );
 
     route.push(res.paymentUrl);
+  }
+
+  async function handleCancel(id : string) {
+    const res = await cancelBooking(accessToken, id);
+    window.location.reload();
   }
   console.log(bookings);
   return (
@@ -80,6 +85,9 @@ export default function Page() {
                           loading ? "Loading document..." : "Download invoice!"
                         }
                       </PDFDownloadLink>
+
+                      <Button variant="destructive" onClick={()=> handleCancel(booking._id)}>Cancel Booking</Button>
+                        
                     </CardFooter>
                   </Card>
                 );

@@ -1,6 +1,7 @@
 "use client";
 import {
   Booking,
+  cancelBooking,
   getBookingById,
   getBookings,
   initPayment,
@@ -62,6 +63,10 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
     route.push(res.paymentUrl);
   }
 
+  async function handleCancel() {
+    const res = await cancelBooking(accessToken, id);
+    route.push("/bookings");
+  }
   return (
     <>
       {booking?.status == "CONFIRMED" ? (
@@ -130,8 +135,8 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
                 <Button onClick={confirmPayment} className="bg-green-400">
                   Confirm
                 </Button>
-                <Button variant={"destructive"}>
-                  <Link href="/">Cancel</Link>
+                <Button variant={"destructive"} onClick={handleCancel}>
+                  Cancel
                 </Button>
               </>
             )}

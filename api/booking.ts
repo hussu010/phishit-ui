@@ -106,3 +106,24 @@ export async function verifyPayment(accessToken: string, id: string) {
     console.log(err);
   }
 }
+
+// /bookings/{id}/cancel
+
+export async function cancelBooking(accessToken: string, id: string) {
+  try {
+    const res = await fetch(`${API_URL}/api/bookings/${id}/cancel`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    if (!res.ok) {
+      throw new Error("Unknown error occurred");
+    }
+    const data = await res.json();
+    return data;
+  } catch (err) {
+    console.log(err);
+  }
+}
