@@ -37,9 +37,8 @@ export default async function Page({
           <h2 className="text-3xl font-bold tracking-tight">
             {adventure.title}
           </h2>
-          <div className="flex items-center space-x-2">
-            <EnrollAdventureDialog id={id} />
-          </div>
+
+          <EnrollAdventureDialog id={id} />
         </div>
 
         <div className="py-10 lg:col-start-1 lg:pb-16 lg:pr-8 lg:pt-6">

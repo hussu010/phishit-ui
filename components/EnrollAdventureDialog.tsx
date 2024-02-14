@@ -15,10 +15,11 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/redux/reducer";
 
 export default function EnrollAdventureDialog({ id }: { id: string }) {
-  const { accessToken } = useSelector((state: RootState) => state.auth);
+  const { accessToken, isAuthenticated } = useSelector((state: RootState) => state.auth);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [openEnrollDialog, setOpenEnrollDialog] = useState(false);
   const [openMessageDialog, setOpenMessageDialog] = useState(false);
+  const { roles,  } = useSelector((state: RootState) => state.users);
 
   const handleEnroll = async () => {
     try {
@@ -34,7 +35,7 @@ export default function EnrollAdventureDialog({ id }: { id: string }) {
   };
 
   return (
-    <>
+    <div className={`${isAuthenticated && roles.includes("GUIDE") ? "flex" : "hidden"} items-center space-x-2`}>
       <Dialog open={openEnrollDialog} onOpenChange={setOpenEnrollDialog}>
         <DialogTrigger asChild>
           <Button>Enroll To Adventure</Button>
@@ -72,6 +73,6 @@ export default function EnrollAdventureDialog({ id }: { id: string }) {
           </DialogHeader>
         </DialogContent>
       </Dialog>
-    </>
+    </div>
   );
 }

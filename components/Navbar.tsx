@@ -13,9 +13,8 @@ import Link from "next/link";
 import Image from "next/image";
 
 const navigation = [
-  { name: "About", href: "#" },
-  { name: "Contact", href: "#" },
-  { name: "FAQ", href: "#" },
+  { name: "Adventures", href: "#" },
+  
 ];
 
 interface CallToAction {
@@ -72,14 +71,7 @@ export default function Navbar() {
           ))}
         </div>
         <div className="hidden lg:flex lg:items-center lg:justify-end lg:flex-1 lg:gap-x-12">
-          {isAuthenticated && roles.includes("GUIDE") ? (
-            <Link
-              href="/guide-dashboard"
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-gray-900 hover:bg-gray-800"
-            >
-              Guide Dashboard
-            </Link>
-          ) : (
+          {isAuthenticated && !roles.includes("GUIDE") && (
             callsToAction.map((item) => (
               <a
                 key={item.name}

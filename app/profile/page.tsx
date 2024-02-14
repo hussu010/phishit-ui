@@ -119,12 +119,12 @@ function Page() {
   const [isEditing, setIsEditing] = useState(false);
   console.log(enrollAdventure);
   return (
-    <>
+    <div className="flex flex-col items-center justify-center">
       {isEditing ? (
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-8 px-[50px]"
+            className="space-y-8 px-[50px] w-full max-w-[500px]"
           >
             <FormField
               control={form.control}
@@ -204,63 +204,83 @@ function Page() {
             />
 
             <Button type="submit">Submit</Button>
+            <Button onClick={() => setIsEditing(false)} className="ml-2">
+              Cancel
+            </Button>
           </form>
         </Form>
       ) : (
-        <div className="user-card border flex flex-col gap-5 p-3">
-          <div>
-            {userDetail && (
-              <Image
-                src={userDetail.avatar}
-                alt="avatar"
-                width={50}
-                height={50}
-              />
-            )}
-          </div>
-          <div>
-            <strong>Full Name:</strong> {userDetail?.fullName || ""}
-          </div>
-          <div>
-            <strong>Email:</strong> {userDetail?.email || ""}
-          </div>
-          <div>
-            <strong>Gender:</strong> {userDetail?.gender || ""}
-          </div>
-          <div>
-            <strong>Date of Birth:</strong> {userDetail?.dateOfBirth || ""}
-          </div>
-          <div>
-            <strong>Bio:</strong> {userDetail?.bio || ""}
-          </div>
-          <Button onClick={() => setIsEditing(true)}>Edit</Button>
-        </div>
+        <Card className="w-[80%] min-w-[350px]">
+          <CardHeader>
+            <CardTitle className="flex justify-between w-full">
+              {userDetail?.fullName || "edit profile to add name"}
+              {userDetail && (
+                <img
+                  src={userDetail.avatar}
+                  alt="avatar"
+                  width={50}
+                  height={50}
+                />
+              )}
+            </CardTitle>
+            <CardDescription>{userDetail?.email || ""} </CardDescription>
+          </CardHeader>
+          <CardContent className="flex justify-between">
+            <p className="w-1/2">
+              Bio: <b>{userDetail?.bio || ""}</b>
+            </p>
+            <div className="flex flex-col gap-2">
+              <p>
+                Date of Birth:{" "}
+                <b>{userDetail?.dateOfBirth.split("T")[0] || ""}</b>
+              </p>
+              <p>
+                Gender: <b>{userDetail?.gender || ""}</b>
+              </p>
+            </div>
+          </CardContent>
+          <CardFooter>
+            <Button onClick={() => setIsEditing(true)}>Edit</Button>
+          </CardFooter>
+        </Card>
       )}
 
       {roles.includes("GUIDE") && (
-        <div className="p-5">
-          <h1 className="text-[40px] font-bold">Your Guide Details:</h1>
+        <div className="py-5 w-[80%]">
+          <Card className="w-full min-w-[350px]">
+            <CardHeader>
+              <CardTitle className="flex justify-between w-full">
+                Guide Details
+                <div className="flex gap-3 flex-col justify-between items-center">
+                  <h1 className=" text-[26px] font-bold">
+                    Availibility status
+                  </h1>
 
-          <div className="flex flex-col  justify-between">
-            <h1 className=" text-[26px] font-bold">
-              Change your Availibility status
-            </h1>
-            <p>people can&apos;t hire you when you are unavailable</p>
-            <span
-              className={`text-sm ${
-                enrollAdventure?.isAvailable ? "text-green-500" : "text-red-500"
-              }`}
-            >
-              {enrollAdventure?.isAvailable ? "available" : "not avaibale"}
-            </span>
-            <Switch
-              checked={enrollAdventure?.isAvailable}
-              onCheckedChange={changeAvailble}
-            />
-          </div>
-
-          <h1 className="text-[26px] font-bold mt-3">Enrolled Adventures:</h1>
-          <div className="grid md:grid-cols-2 grid-cols-1 gap-2 p-6 w-full">
+                  <Switch
+                    checked={enrollAdventure?.isAvailable}
+                    onCheckedChange={changeAvailble}
+                  />
+                  <span
+                    className={`text-sm ${
+                      enrollAdventure?.isAvailable
+                        ? "text-green-500"
+                        : "text-red-500"
+                    }`}
+                  >
+                    {enrollAdventure?.isAvailable
+                      ? "available"
+                      : "not avaibale"}
+                  </span>
+                </div>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="flex justify-between"></CardContent>
+            <CardFooter></CardFooter>
+          </Card>
+          <h1 className="text-[26px] font-semibold mt-3 text-center border-y-black border-y">
+            Enrolled Adventures
+          </h1>
+          <div className="grid md:grid-cols-2 grid-cols-1 gap-4 p-6 w-full">
             {enrollAdventure?.adventures.map((adventure) => {
               return (
                 <Card className="w-[500px]" key={adventure._id}>
@@ -293,7 +313,7 @@ function Page() {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
 

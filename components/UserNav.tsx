@@ -62,15 +62,23 @@ export default function UserNav() {
             <Link href={"/profile"}>Profile</Link>
             <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
           </DropdownMenuItem>
+          {roles.includes("ADMIN") && (
+            <>
+              <DropdownMenuItem>
+                <Link href={"/admin/adventures"}>Manage Adventures</Link>
+                <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+              </DropdownMenuItem>
+
+              <DropdownMenuItem>
+                <Link href={"/admin/guide-requests"}>Manage Guides</Link>
+                <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+              </DropdownMenuItem>
+            </>
+          )}
           <DropdownMenuItem>
-            <Link href={"/admin/adventures"}>Manage Adventures</Link>
-            <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            Settings
+            <Link href={"/adventures"}>Adventures</Link>
             <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuItem>New Team</DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleLogout}>
