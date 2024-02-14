@@ -93,7 +93,7 @@ export function PickDate({
     setCurrentState("guide");
     form.reset();
   }
-
+  console.log(guides, "guides")
   const onGuideSubmit = async (data: z.infer<typeof bookingFormSchema>) => {
     const booking = await BookAdventure(
       id,
@@ -224,6 +224,7 @@ export function PickDate({
                             </FormControl>
                             <FormLabel className="font-normal">
                               {guide.username}{" "}
+                              
                               <span
                                 className={`text-[10px] ${
                                   guide.isAvailable
