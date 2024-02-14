@@ -12,6 +12,7 @@ export default async function Page({
   params: { id: string };
 }) {
   const adventure = await getAdventureById(id);
+  
 
   return (
     <div className="absoulte bg-white">
