@@ -239,7 +239,7 @@ function Page() {
             <div className="flex flex-col gap-2">
               <p>
                 Date of Birth:{" "}
-                <b>{userDetail?.dateOfBirth.split("T")[0] || ""}</b>
+                <b>{userDetail?.dateOfBirth?.split("T")[0] || ""}</b>
               </p>
               <p>
                 Gender: <b>{userDetail?.gender || ""}</b>
