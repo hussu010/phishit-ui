@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 import { Dialog } from "@headlessui/react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { PlusCircleIcon } from "@heroicons/react/20/solid";
 
@@ -11,6 +11,8 @@ import UserNav from "./UserNav";
 import { RootState } from "@/redux/reducer";
 import Link from "next/link";
 import Image from "next/image";
+import { getMe } from "@/api/users";
+import { logout } from "@/redux/features/auth-slice";
 
 const navigation = [
   { name: "Adventures", href: "#" },
@@ -29,9 +31,28 @@ const callsToAction: CallToAction[] = [
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const dispatch = useDispatch();
 
-  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const { isAuthenticated, accessToken } = useSelector((state: RootState) => state.auth);
   const { roles } = useSelector((state: RootState) => state.users);
+
+  useEffect(() => {
+    async function checkJWT(token: string) {
+      const res = await getMe(token);
+      if (res.expire) {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        document.cookie =
+          "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        document.cookie = "roles=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        dispatch(logout());
+        window.location.href = "/";
+        return;
+      }
+      return;
+    }
+    checkJWT(accessToken);
+  }, []);
 
   return (
     <header>

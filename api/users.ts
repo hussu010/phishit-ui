@@ -39,10 +39,13 @@ export const getMe = async (token: string) => {
 
     if (!response.ok) {
       if (
-        (response.status === 500 || response.status === 401) &&
+        (response.status === 500) &&
         data.message
       ) {
         throw new Error(data.message);
+      }
+      else if (response.status === 401) {
+        return { expire: true };
       } else {
         throw new Error("Unknown error occurred");
       }
