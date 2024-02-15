@@ -71,7 +71,7 @@ export const profile = async (token: string) => {
         (response.status === 500 || response.status === 401) &&
         data.message
       ) {
-        throw new Error(data.message);
+        return data.message;
       } else {
         return {};
       }

@@ -39,6 +39,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Guide } from "@/api/guide-requests";
 import { initPayment } from "@/api/booking";
+import { getUserByName } from "@/api/users";
 
 const bookingFormSchema = z.object({
   noOfPeople: z.string().min(1, "Number of people must be at least 1"),
@@ -89,6 +90,12 @@ export function PickDate({
     const formattedDate = `${year}-${month}-${day}`;
     setStartDate(formattedDate);
     const avai = await postAdventureReqGuide(id, accessToken, formattedDate);
+
+    avai.map(async (guide: any) => {
+      const user = await getUserByName(guide.username);
+      
+    }
+    );
     setGuides(avai);
     setCurrentState("guide");
     form.reset();

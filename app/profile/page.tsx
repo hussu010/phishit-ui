@@ -45,6 +45,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import { set } from "date-fns";
 
 const formSchema = z.object({
   fullName: z.string(),
@@ -94,8 +95,14 @@ function Page() {
 
   async function getUserDetail(accessToken: string) {
     const response = await profile(accessToken);
-    if (!response) return;
+    console.log(response);
+
+    if (Object.keys(response).length === 0) {
+      return;
+    }
+
     setUserDetail(response);
+    setIsEditing(false);
   }
 
   useEffect(() => {
@@ -116,7 +123,7 @@ function Page() {
     getEnrolledAventure(accessToken);
   }
   // State to manage user data
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(true);
   console.log(enrollAdventure);
   return (
     <div className="flex flex-col items-center justify-center">
