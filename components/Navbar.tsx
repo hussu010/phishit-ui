@@ -14,10 +14,7 @@ import Image from "next/image";
 import { getMe } from "@/api/users";
 import { logout } from "@/redux/features/auth-slice";
 
-const navigation = [
-  { name: "Adventures", href: "#" },
-  
-];
+const navigation = [{ name: "Adventures", href: "#" }];
 
 interface CallToAction {
   name: string;
@@ -33,7 +30,9 @@ export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dispatch = useDispatch();
 
-  const { isAuthenticated, accessToken } = useSelector((state: RootState) => state.auth);
+  const { isAuthenticated, accessToken } = useSelector(
+    (state: RootState) => state.auth
+  );
   const { roles } = useSelector((state: RootState) => state.users);
 
   useEffect(() => {
@@ -44,9 +43,10 @@ export default function Navbar() {
         localStorage.removeItem("refreshToken");
         document.cookie =
           "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        document.cookie = "roles=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        document.cookie =
+          "roles=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         dispatch(logout());
-        window.location.href = "/";
+        // window.location.href = "/";
         return;
       }
       return;
@@ -92,7 +92,8 @@ export default function Navbar() {
           ))}
         </div>
         <div className="hidden lg:flex lg:items-center lg:justify-end lg:flex-1 lg:gap-x-12">
-          {isAuthenticated && !roles.includes("GUIDE") && (
+          {isAuthenticated &&
+            !roles.includes("GUIDE") &&
             callsToAction.map((item) => (
               <a
                 key={item.name}
@@ -102,8 +103,7 @@ export default function Navbar() {
                 <item.icon className="mr-2 h-5 w-5" aria-hidden="true" />
                 {item.name}
               </a>
-            ))
-          )}
+            ))}
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           {isAuthenticated ? <UserNav /> : <LoginDialog />}

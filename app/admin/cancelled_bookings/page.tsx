@@ -1,31 +1,28 @@
 "use client";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { API_URL } from "@/config/constants";
-import { Action, Response } from "@/config/types";
 import { RootState } from "@/redux/reducer";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Link from "next/link";
 
 function Page() {
   const { isAuthenticated, accessToken } = useSelector(
     (state: RootState) => state.auth
   );
   const { roles } = useSelector((state: RootState) => state.users);
-  const [interactions, setInteractions] = useState<Action[]>([]);
+  const [cancelledBookin, setCancelledBookin] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch(`${API_URL}/api/backoffice/interactions`, {
+    fetch(`${API_URL}/api/backoffice/bookings?status=CANCELLED`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -36,17 +33,17 @@ function Page() {
         return res.json();
       })
       .then((data) => {
-        setInteractions(data.data);
+        setCancelledBookin(data.data);
       })
       .catch((err) => {
         console.log(err);
       });
   }, []);
-  console.log(isAuthenticated, accessToken, roles);
+  console.log(cancelledBookin);
   return (
     <div className="bg-white">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <Tabs defaultValue="interactions" className="space-y-4">
+        <Tabs defaultValue="cancelled_bookings" className="space-y-4">
           <TabsList>
             <Link href="/admin/adventures">
               <TabsTrigger value="manage-adventures">
@@ -66,33 +63,31 @@ function Page() {
             </Link>
           </TabsList>
         </Tabs>
-        <Table>
-          <TableCaption>Recent Activities</TableCaption>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[100px]">User Id</TableHead>
-              <TableHead>User Name</TableHead>
-              <TableHead>Recources</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {interactions.map((interaction, index) => {
-              return (
-                <TableRow key={index}>
-                  <TableCell className="font-medium">
-                    {interaction.user._id}
-                  </TableCell>
-                  <TableCell>{interaction.user.username}</TableCell>
-                  <TableCell>{interaction.resource}</TableCell>
-                  <TableCell className="text-right">
-                    {interaction.action}
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
+
+        <section className="grid md:grid-cols-3 grid-col-1">
+          {cancelledBookin.map((booking) => {
+            return (
+              <Card key={booking._id} className="flex flex-col gap-3 w-[400px]">
+                <CardHeader>
+                  <CardTitle>{booking.package.title}</CardTitle>
+                  <CardDescription className=" line-clamp-4">
+                    {booking.package.description}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p>Price: Rs.{booking.package.price}</p>
+                  <p>Duration: {booking.package.duration}days</p>
+                  <p>Guide Name: {booking.guide.username}</p>
+                </CardContent>
+                <CardFooter>
+                  <Link href={`/adventures/${booking.adventureId}`}>
+                    View Adventure
+                  </Link>
+                </CardFooter>
+              </Card>
+            );
+          })}
+        </section>
       </div>
     </div>
   );

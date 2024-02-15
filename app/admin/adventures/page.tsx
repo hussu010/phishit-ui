@@ -84,7 +84,7 @@ export default function Adventures() {
   return (
     <div className="bg-white">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <Tabs defaultValue="overview" className="space-y-4">
+        <Tabs defaultValue="manage-adventures" className="space-y-4">
           <TabsList>
             <Link href="/admin/adventures">
               <TabsTrigger value="manage-adventures">
@@ -94,8 +94,14 @@ export default function Adventures() {
             <Link href="/admin/guide-requests">
               <TabsTrigger value="guide-requests">Guide Requests</TabsTrigger>
             </Link>
-            <TabsTrigger value="reports">Reports</TabsTrigger>
-            <TabsTrigger value="notifications">Notifications</TabsTrigger>
+            <Link href="/admin/interactions">
+              <TabsTrigger value="interactions">Recent Activities</TabsTrigger>
+            </Link>
+            <Link href="/admin/cancelled_bookings">
+              <TabsTrigger value="cancelled_bookings">
+                Cancelled Bookings
+              </TabsTrigger>
+            </Link>
           </TabsList>
         </Tabs>
       </div>
