@@ -15,9 +15,7 @@ export type Guide = {
   _id: string;
   username: string;
   isAvailable: boolean;
- 
 };
-
 
 export const createGuideRequest = async ({
   type,
@@ -25,6 +23,8 @@ export const createGuideRequest = async ({
   phoneNumber,
   email,
   address,
+  gender,
+  dateOfBirth,
   message,
   documents,
   accessToken,
@@ -34,6 +34,8 @@ export const createGuideRequest = async ({
   phoneNumber: string;
   email: string;
   address: string;
+  gender: string;
+  dateOfBirth: string;
   message: string;
   documents: { url: string; type: string }[];
   accessToken: string;
@@ -52,6 +54,8 @@ export const createGuideRequest = async ({
         email,
         address,
         message,
+        gender,
+        dateOfBirth,
         documents,
       }),
     });
@@ -97,5 +101,4 @@ export const getGuideRequests = async (auth: string) => {
     console.error("Error getting guide requests:", error);
     throw error;
   }
-  
-}
+};

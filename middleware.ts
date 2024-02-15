@@ -17,7 +17,7 @@ export default async function middleware(req: NextRequest) {
 
   if (
     adminRoutes.includes(req.nextUrl.pathname) &&
-    (!isAuthenticated || !roles.includes("ADMIN"))
+    (!isAuthenticated || !roles.includes("SUPER_ADMIN"))
   ) {
     const absoluteURL = new URL("/", req.nextUrl);
     return NextResponse.redirect(absoluteURL.toString());
@@ -26,5 +26,5 @@ export default async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/admin/:path*", "/guide-requests", "/adventures/:path", "/profile"],
+  matcher: ["/", "/admin/:path*", "/guide-requests", "/adventures/:path", "/:path"],
 };

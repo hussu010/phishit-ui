@@ -63,7 +63,7 @@ function Page() {
     defaultValues: {
       fullName: "",
       email: "",
-      gender: "MALE",
+      gender: "OTHER",
       dateOfBirth: "",
       bio: "",
     },

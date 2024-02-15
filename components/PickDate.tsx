@@ -61,7 +61,7 @@ export function PickDate({
   const route = useRouter();
   const [startDate, setStartDate] = useState<string>("");
   const [currentState, setCurrentState] = useState<"date" | "guide">("date");
-  const [guides, setGuides] = useState<Guide[]>([]);
+  const [guides, setGuides] = useState<any[]>([]);
 
   const bookingForm = useForm<z.infer<typeof bookingFormSchema>>({
     resolver: zodResolver(bookingFormSchema),
@@ -93,14 +93,16 @@ export function PickDate({
 
     avai.map(async (guide: any) => {
       const user = await getUserByName(guide.username);
-      
-    }
-    );
-    setGuides(avai);
+      setGuides((prev) => [
+        ...prev,
+        { ...user, isAvailable: guide.isAvailable },
+      ]);
+    });
+    // setGuides(avai);
     setCurrentState("guide");
     form.reset();
   }
-  console.log(guides, "guides")
+  console.log(guides, "guides");
   const onGuideSubmit = async (data: z.infer<typeof bookingFormSchema>) => {
     const booking = await BookAdventure(
       id,
@@ -225,15 +227,26 @@ export function PickDate({
                           >
                             <FormControl>
                               <RadioGroupItem
-                                value={guide._id}
+                                value={guide.user._id}
                                 disabled={!guide.isAvailable}
                               />
                             </FormControl>
-                            <FormLabel className="font-normal">
-                              {guide.username}{" "}
-                              
-                              <span
-                                className={`text-[10px] ${
+                            <FormLabel className="font-normal border w-full flex items-center justify-between p-2">
+                              <span>
+                                {guide.profile && (
+                                  <img
+                                    src={guide.profile.avatar}
+                                    alt={guide.user.username}
+                                    className="w-8 h-8 rounded-full"
+                                  />
+                                )}
+                                {guide.profile
+                                  ? guide.profile.fullName
+                                  : guide.user.username}{" "}
+                              </span>
+
+                              <div
+                                className={`text-[10px] flex flex-col gap-2 ${
                                   guide.isAvailable
                                     ? "text-green-400"
                                     : "text-red-500"
@@ -242,7 +255,13 @@ export function PickDate({
                                 {guide.isAvailable
                                   ? "available"
                                   : "unavailable"}
-                              </span>
+
+                                {guide.profile && (
+                                  <span className="text-black">
+                                    Gender : {guide.profile.gender}
+                                  </span>
+                                )}
+                              </div>
                             </FormLabel>
                           </FormItem>
                         );

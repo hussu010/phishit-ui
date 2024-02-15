@@ -46,6 +46,10 @@ const FormSchema = z.object({
   name: z.string().min(3).max(255),
   phoneNumber: z.string().min(10).max(10),
   email: z.string().email(),
+  gender: z.enum(["MALE", "FEMALE", "OTHER"]),
+  dateOfBirth: z.string().refine((date) => /^\d{4}-\d{2}-\d{2}$/.test(date), {
+    message: "Invalid date format. Please use YYYY-MM-DD.",
+  }),
   address: z.string().min(3).max(255),
   cover_letter: z.string().min(3).max(255),
   documentTitle: z.enum([
@@ -86,9 +90,11 @@ export default function PostCreate() {
       type: "INDIVIDUAL",
       name: "",
       phoneNumber: "",
+      gender: "OTHER",
       email: "",
       address: "",
       cover_letter: "",
+      dateOfBirth: "",
       documentTitle: "OTHER",
     },
   });
@@ -106,7 +112,16 @@ export default function PostCreate() {
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
       setErrorMessage("");
-      const { type, name, phoneNumber, email, address, cover_letter } = data;
+      const {
+        type,
+        name,
+        phoneNumber,
+        email,
+        address,
+        cover_letter,
+        gender,
+        dateOfBirth,
+      } = data;
 
       if (documentDetail.length === 0) {
         throw new Error("Please upload at least one document.");
@@ -118,9 +133,11 @@ export default function PostCreate() {
         phoneNumber,
         email,
         address,
+        gender,
         message: cover_letter,
         documents: documentDetail,
         accessToken,
+        dateOfBirth,
       });
 
       form.reset();
@@ -299,6 +316,43 @@ export default function PostCreate() {
                   </FormItem>
                 )}
               />
+              <FormField
+                control={form.control}
+                name="dateOfBirth"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Date of Birth</FormLabel>
+                    <FormControl>
+                      <Input placeholder="1990-01-01" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      This is your date of birth.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="gender"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Gender</FormLabel>
+                    <FormControl>
+                      <select {...field}>
+                        <option value="MALE">Male</option>
+                        <option value="FEMALE">Female</option>
+                        <option value="OTHER">Other</option>
+                      </select>
+                    </FormControl>
+                    <FormDescription>
+                      Please select your gender.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <FormField
                 control={form.control}
                 name="cover_letter"
