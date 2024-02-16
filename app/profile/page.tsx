@@ -58,15 +58,11 @@ const formSchema = z.object({
 });
 
 function Page() {
+  const [userDetail, setUserDetail] = useState<UserProfile>();
+  const [enrollAdventure, setEnrollAdventure] = useState<UserMe>();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      fullName: "",
-      email: "",
-      gender: "OTHER",
-      dateOfBirth: "",
-      bio: "",
-    },
+    defaultValues: {},
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -78,13 +74,15 @@ function Page() {
       dateOfBirth,
       bio,
     });
-    console.log(values);
+    form.setValue("fullName", fullName);
+    form.setValue("email", email);
+    form.setValue("dateOfBirth", dateOfBirth);
+    form.setValue("gender", gender);
+    form.setValue("bio", bio);
     setUserDetail(res);
     setIsEditing(false);
   }
 
-  const [userDetail, setUserDetail] = useState<UserProfile>();
-  const [enrollAdventure, setEnrollAdventure] = useState<UserMe>();
   const { accessToken } = useSelector((state: RootState) => state.auth);
   const { roles } = useSelector((state: RootState) => state.users);
 
@@ -98,11 +96,19 @@ function Page() {
     console.log(response);
 
     if (Object.keys(response).length === 0) {
+      setIsEditing(false);
       return;
     }
+    form.setValue("fullName", response.fullName || "");
+    form.setValue("email", response.email || "");
+    form.setValue(
+      "dateOfBirth",
+      response.dateofBirth ? response.dateOfBirth.spilt("T")[0] : ""
+    );
+    form.setValue("gender", response.gender || "OTHER");
+    form.setValue("bio", response.gender || "");
 
     setUserDetail(response);
-    setIsEditing(false);
   }
 
   useEffect(() => {
@@ -123,7 +129,7 @@ function Page() {
     getEnrolledAventure(accessToken);
   }
   // State to manage user data
-  const [isEditing, setIsEditing] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
   console.log(enrollAdventure);
   return (
     <div className="flex flex-col items-center justify-center">
@@ -134,6 +140,7 @@ function Page() {
             className="space-y-8 px-[50px] w-full max-w-[500px]"
           >
             <FormField
+              defaultValue={userDetail?.fullName}
               control={form.control}
               name="fullName"
               render={({ field }) => (
@@ -151,6 +158,7 @@ function Page() {
             />
             <FormField
               control={form.control}
+              defaultValue={userDetail?.email}
               name="email"
               render={({ field }) => (
                 <FormItem>
@@ -165,6 +173,7 @@ function Page() {
             />
             <FormField
               control={form.control}
+              defaultValue={userDetail?.dateOfBirth}
               name="dateOfBirth"
               render={({ field }) => (
                 <FormItem>
@@ -179,6 +188,7 @@ function Page() {
             />
             <FormField
               control={form.control}
+              defaultValue={userDetail?.gender}
               name="gender"
               render={({ field }) => (
                 <FormItem>
@@ -197,6 +207,7 @@ function Page() {
             />
             <FormField
               control={form.control}
+              defaultValue={userDetail?.bio}
               name="bio"
               render={({ field }) => (
                 <FormItem>
