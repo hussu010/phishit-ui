@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation";
 import { createJWT } from "@/api/auth";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "@/redux/features/auth-slice";
+import { setUser } from "@/redux/features/users-slice";
+import { getMe } from "@/api/users";
 
 export default function GoogleCallback() {
   const router = useRouter();
@@ -26,6 +28,14 @@ export default function GoogleCallback() {
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("refreshToken", refreshToken);
 
+        const user = await getMe(accessToken);
+        dispatch(
+          setUser({
+            phoneNumber: user.phoneNumber,
+            username: user.username,
+            roles: user.roles,
+          })
+        );
         dispatch(
           loginSuccess({
             accessToken,
@@ -43,7 +53,6 @@ export default function GoogleCallback() {
 
   return (
     <div>
-      <Navbar />
       <div className="flex flex-col items-center justify-center h-screen">
         Redirecting to home page...
       </div>

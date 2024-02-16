@@ -1,5 +1,10 @@
 "use client";
-import { Booking, cancelBooking, getBookings, initPayment } from "@/api/booking";
+import {
+  Booking,
+  cancelBooking,
+  getBookings,
+  initPayment,
+} from "@/api/booking";
 import Navbar from "@/components/Navbar";
 import Pdf from "@/components/Pdf";
 import { Button } from "@/components/ui/button";
@@ -11,6 +16,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RootState } from "@/redux/reducer";
 import { PDFDownloadLink } from "@react-pdf/renderer";
@@ -41,7 +54,7 @@ export default function Page() {
     route.push(res.paymentUrl);
   }
 
-  async function handleCancel(id : string) {
+  async function handleCancel(id: string) {
     const res = await cancelBooking(accessToken, id);
     window.location.reload();
   }
@@ -53,6 +66,7 @@ export default function Page() {
           <TabsTrigger value="CONFIRMED">CONFIRMED BOOKINGS</TabsTrigger>
           <TabsTrigger value="PENDING">PENDING BOOKINGS</TabsTrigger>
           <TabsTrigger value="EXPIRED">PAYMENT EXPIRED</TabsTrigger>
+          <TabsTrigger value="CANCELLED">CANCELLED BOOKINGs</TabsTrigger>
         </TabsList>
         <TabsContent value="CONFIRMED">
           <div className="flex gap-5 flex-wrap justify-center">
@@ -85,9 +99,22 @@ export default function Page() {
                           loading ? "Loading document..." : "Download invoice!"
                         }
                       </PDFDownloadLink>
-
-                      <Button variant="destructive" onClick={()=> handleCancel(booking._id)}>Cancel Booking</Button>
-                        
+                      <Dialog>
+                        <DialogTrigger>Cancel Booking</DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Are you absolutely sure you want to cancel your booking?</DialogTitle>
+                            <DialogDescription>
+                              <Button
+                                variant="destructive"
+                                onClick={() => handleCancel(booking._id)}
+                              >
+                                Proceed
+                              </Button>
+                            </DialogDescription>
+                          </DialogHeader>
+                        </DialogContent>
+                      </Dialog>
                     </CardFooter>
                   </Card>
                 );
@@ -152,6 +179,37 @@ export default function Page() {
                       <Button onClick={() => handlePay(booking._id)}>
                         Pay Through Khalti
                       </Button>
+                    </CardFooter>
+                  </Card>
+                );
+              })}
+          </div>
+        </TabsContent>
+        <TabsContent value="CANCELLED">
+          <div className="flex gap-5 flex-wrap justify-center">
+            {bookings
+              .filter((books) => books.payment?.status == "CANCELLED")
+              .map((booking) => {
+                return (
+                  <Card
+                    key={booking._id}
+                    className="flex flex-col gap-3 w-[400px]"
+                  >
+                    <CardHeader>
+                      <CardTitle>{booking.package.title}</CardTitle>
+                      <CardDescription className=" line-clamp-4">
+                        {booking.package.description}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <p>Price: Rs.{booking.package.price}</p>
+                      <p>Duration: {booking.package.duration}days</p>
+                      <p>Guide Name: {booking.guide.username}</p>
+                    </CardContent>
+                    <CardFooter>
+                      <Link href={`/adventures/${booking.adventure}`}>
+                        View Adventure
+                      </Link>
                     </CardFooter>
                   </Card>
                 );
