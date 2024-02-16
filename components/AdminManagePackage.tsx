@@ -41,6 +41,7 @@ import { createPackages, deletePackages, editPackages } from "@/api/packages";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/reducer";
 import { DialogClose } from "@radix-ui/react-dialog";
+import EditPackages from "./EditPackages";
 
 const formSchema = z.object({
   title: z.string().nonempty(),
@@ -114,10 +115,6 @@ function AdminManagePackage({ adventureId }: { adventureId: string }) {
     const updatedPackages = packages.map((pkg) => (pkg._id === id ? res : pkg));
     setPackages(updatedPackages);
     setFormError("");
-    // form.setValue("title", "");
-    // form.setValue("description", "");
-    // form.setValue("price", "");
-    // form.setValue("duration", "");
   }
 
   console.log(packages);
@@ -253,130 +250,12 @@ function AdminManagePackage({ adventureId }: { adventureId: string }) {
                   </p>
                   <div className="flex justify-between mt-4">
                     <div className="flex space-x-2">
-                      <Dialog>
-                        <DialogTrigger className="p-3 bg-[black] rounded-sm text-white">
-                          Edit Packages
-                        </DialogTrigger>
-                        <DialogContent>
-                          <DialogHeader>
-                            <DialogTitle>
-                              Edit your adventure package
-                              {formError && (
-                                <div className="text-red-500 text-sm">
-                                  {formError}
-                                </div>
-                              )}
-                            </DialogTitle>
-                            <DialogDescription>
-                              <Form {...form}>
-                                <form
-                                  // onSubmit={form.handleSubmit(onEditSubmit)}
-
-                                  className="space-y-8"
-                                >
-                                  <FormField
-                                    control={form.control}
-                                    name="title"
-                                    defaultValue={adventurePackage.title}
-                                    render={({ field }) => (
-                                      <FormItem>
-                                        <FormLabel>Title</FormLabel>
-                                        <FormControl>
-                                          <Input
-                                            placeholder="Adventure Title"
-                                            {...field}
-                                          />
-                                        </FormControl>
-                                        <FormDescription>
-                                          This is the title of the adventure.
-                                        </FormDescription>
-                                        <FormMessage />
-                                      </FormItem>
-                                    )}
-                                  />
-
-                                  <FormField
-                                    control={form.control}
-                                    name="description"
-                                    defaultValue={adventurePackage.description}
-                                    render={({ field }) => (
-                                      <FormItem>
-                                        <FormLabel>Description</FormLabel>
-                                        <FormControl>
-                                          <Textarea
-                                            placeholder="Adventure Description"
-                                            {...field}
-                                          />
-                                        </FormControl>
-                                        <FormDescription>
-                                          This is the description of the
-                                          adventure.
-                                        </FormDescription>
-                                        <FormMessage />
-                                      </FormItem>
-                                    )}
-                                  />
-                                  <FormField
-                                    control={form.control}
-                                    name="price"
-                                    defaultValue={adventurePackage.price.toString()}
-                                    render={({ field }) => (
-                                      <FormItem>
-                                        <FormLabel>Price</FormLabel>
-                                        <FormControl>
-                                          <Input
-                                            placeholder="Adventure Price"
-                                            {...field}
-                                            type="number"
-                                          />
-                                        </FormControl>
-                                        <FormDescription>
-                                          This is the price of the adventure.
-                                        </FormDescription>
-                                        <FormMessage />
-                                      </FormItem>
-                                    )}
-                                  />
-                                  <FormField
-                                    control={form.control}
-                                    name="duration"
-                                    defaultValue={adventurePackage.duration.toString()}
-                                    render={({ field }) => (
-                                      <FormItem>
-                                        <FormLabel>Duration</FormLabel>
-                                        <FormControl>
-                                          <Input
-                                            placeholder="Adventure duration"
-                                            {...field}
-                                            type="number"
-                                          />
-                                        </FormControl>
-                                        <FormDescription>
-                                          Duration of adventure in days
-                                        </FormDescription>
-                                        <FormMessage />
-                                      </FormItem>
-                                    )}
-                                  />
-                                  <DialogClose>
-                                    <Button
-                                      onClick={(e) =>
-                                        onEditSubmit(
-                                          e,
-                                          form.getValues(),
-                                          adventurePackage._id
-                                        )
-                                      }
-                                    >
-                                      Save
-                                    </Button>
-                                  </DialogClose>
-                                </form>
-                              </Form>
-                            </DialogDescription>
-                          </DialogHeader>
-                        </DialogContent>
-                      </Dialog>
+                      <EditPackages
+                        adventurePackage={adventurePackage}
+                        adventureId={adventureId}
+                        setPackages={setPackages}
+                        packages={packages}
+                      />
                       <Dialog>
                         <DialogTrigger className="p-3 bg-red-400 rounded-sm text-white">
                           Delete
