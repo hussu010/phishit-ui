@@ -14,7 +14,10 @@ import Image from "next/image";
 import { getMe } from "@/api/users";
 import { logout } from "@/redux/features/auth-slice";
 
-const navigation = [{ name: "Adventures", href: "#" }];
+const navigation = [
+  { name: "Adventures", href: "/adventures" },
+  { name: "Bookings", href: "/bookings" },
+];
 
 interface CallToAction {
   name: string;
