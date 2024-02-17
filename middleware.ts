@@ -11,7 +11,7 @@ export default async function middleware(req: NextRequest) {
     "/admin/interactions",
     "/admin/cancelled_bookings",
   ];
-  const protectedRoutes = ["/guide-requests", "/adventures, /profile"];
+  const protectedRoutes = ["/guide-requests", "/profile", "/bookings"];
 
   const isAuthenticated = !!cookieStore.get("accessToken");
   const roles = cookieStore.get("roles")?.value.split(",") || [];
@@ -38,5 +38,6 @@ export const config = {
     "/guide-requests",
     "/adventures/:path",
     "/profile",
+    "/bookings",
   ],
 };

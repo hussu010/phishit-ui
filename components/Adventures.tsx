@@ -59,7 +59,7 @@ const Adventure = async () => {
 
   return (
     <>
-      <div className="absolute inset-x-0 z-50 bg-white">
+      <div className="inset-x-0 z-50 bg-white">
         <div className="text-center my-6">
           <h1 className="mt-4 text-2xl font-bold tracking-tight text-gray-900 sm:text-5xl">
             Popular Adventures
