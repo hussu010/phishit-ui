@@ -24,8 +24,12 @@ function Footer() {
       <div className="flex gap-5 justify-center">
         <ul className="text-gray-400 flex gap-4">
           <li>Help</li>
-          <li>Terms of Service</li>
-          <li>Privasy Policy</li>
+          <li>
+            <Link href="/terms-and-conditions">Terms of Service</Link>
+          </li>
+          <li>
+            <Link href="/privacy-policy">Privasy Policy</Link>
+          </li>
           <li>Nepal Privacy Policy</li>
         </ul>
         <p className="text-gray-400">

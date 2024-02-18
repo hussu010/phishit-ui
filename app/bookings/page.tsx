@@ -60,7 +60,7 @@ export default function Page() {
   }
   console.log(bookings);
   return (
-    <>
+    <section className="min-h-[90vh]">
       <Tabs defaultValue="CONFIRMED" className="w-full">
         <TabsList>
           <TabsTrigger value="CONFIRMED">CONFIRMED BOOKINGS</TabsTrigger>
@@ -217,6 +217,6 @@ export default function Page() {
           </div>
         </TabsContent>
       </Tabs>
-    </>
+    </section>
   );
 }

@@ -41,7 +41,7 @@ function Page() {
   }, []);
   console.log(cancelledBookin);
   return (
-    <div className="bg-white">
+    <div className="bg-white min-h-[90vh]">
       <div className="flex-1 space-y-4 p-8 pt-6">
         <Tabs defaultValue="cancelled_bookings" className="space-y-4">
           <TabsList>
