@@ -132,7 +132,7 @@ function Page() {
   const [isEditing, setIsEditing] = useState(false);
   console.log(enrollAdventure);
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="flex flex-col items-center justify-center min-h-[100vh]">
       {isEditing ? (
         <Form {...form}>
           <form
