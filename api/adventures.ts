@@ -60,19 +60,23 @@ export const getAdventureById = async (id: string): Promise<Adventure> => {
 export const postAdventureReqGuide = async (
   id: string,
   accessToken: string,
-  date: string
+  date: string,
+  packId: string
 ) => {
   try {
-    const response = await fetch(`${API_URL}/api/adventures/${id}/guides`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-      body: JSON.stringify({
-        startDate: date,
-      }),
-    });
+    const response = await fetch(
+      `${API_URL}/api/adventures/${id}/packages/${packId}/guides`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          startDate: date,
+        }),
+      }
+    );
 
     const data = await response.json();
 
@@ -206,7 +210,11 @@ export const UnenrollAdventure = async ({
   }
 };
 
-export const updateAdventure = async (accessToken:string, adventureId:string, adventure:any) => {
+export const updateAdventure = async (
+  accessToken: string,
+  adventureId: string,
+  adventure: any
+) => {
   try {
     const response = await fetch(`${API_URL}/api/adventures/${adventureId}`, {
       method: "PUT",

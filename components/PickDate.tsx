@@ -89,7 +89,12 @@ export function PickDate({
     // Forming the yyyy-mm-dd format
     const formattedDate = `${year}-${month}-${day}`;
     setStartDate(formattedDate);
-    const avai = await postAdventureReqGuide(id, accessToken, formattedDate);
+    const avai = await postAdventureReqGuide(
+      id,
+      accessToken,
+      formattedDate,
+      currentPackage._id
+    );
 
     avai.map(async (guide: any) => {
       const user = await getUserByName(guide.username);
