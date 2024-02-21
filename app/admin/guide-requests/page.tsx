@@ -27,10 +27,12 @@ import {
 } from "@/components/ui/dialog";
 import { RootState } from "@/redux/reducer";
 import { getGuideRequests } from "@/api/guide-requests";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function Adventures() {
   const [guideRequests, setGuideRequests] = useState<GuideRequestProps[]>([]);
   const { accessToken } = useSelector((state: RootState) => state.auth);
+  const [customMessage, setCustomMessage] = useState("");
 
   useEffect(() => {
     async function getAllGuideRequests(accessToken: string) {
@@ -43,9 +45,11 @@ export default function Adventures() {
   const handleGuideRequestApproval = async ({
     id,
     status,
+    message,
   }: {
     id: string;
-    status: string;
+      status: string;
+      message: string;
   }) => {
     try {
       const res = await fetch(`${API_URL}/api/guide-requests/${id}/status`, {
@@ -54,7 +58,7 @@ export default function Adventures() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
         },
-        body: JSON.stringify({ status }),
+        body: JSON.stringify({ status, message }),
       });
 
       if (!res.ok) {
@@ -79,7 +83,6 @@ export default function Adventures() {
     <div className="bg-white min-h-[90vh]">
       <div className="flex-1 space-y-4 p-8 pt-6">
         <Tabs defaultValue="guide-requests" className="space-y-4">
-       
           <TabsList>
             <Link href="/admin/adventures">
               <TabsTrigger value="manage-adventures">
@@ -154,18 +157,34 @@ export default function Adventures() {
                 {}
                 {guideRequest.status === "PENDING" && (
                   <>
-                    <Button
-                      className="mt-2"
-                      variant="default"
-                      onClick={() => {
-                        handleGuideRequestApproval({
-                          id: guideRequest._id,
-                          status: "APPROVED",
-                        });
-                      }}
-                    >
-                      Approve
-                    </Button>
+                    <Dialog>
+                      <DialogTrigger>Approve Guide</DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>
+                            Do you really want to accept this guide request?
+                          </DialogTitle>
+                          <DialogDescription>
+                   
+                            <Button
+                              className="mt-2"
+                              variant="default"
+                              onClick={() => {
+                                handleGuideRequestApproval({
+                                  id: guideRequest._id,
+                                  status: "APPROVED",
+                                  message: "Your guide request has been approved",
+                                });
+                              
+                              }}
+                            >
+                              Approve
+                            </Button>
+                          </DialogDescription>
+                        </DialogHeader>
+                      </DialogContent>
+                    </Dialog>
+
                     <Dialog>
                       <DialogTrigger asChild>
                         <Button variant="destructive">Reject</Button>
@@ -176,6 +195,12 @@ export default function Adventures() {
                             This action cannot be undone. Are you sure you want
                             to reject this guide request.
                           </DialogDescription>
+                          <Textarea
+                              className="mt-2"
+                              placeholder="Enter custom message (optional)"
+                              value={customMessage}
+                              onChange={(e) => setCustomMessage(e.target.value)}
+                            />
                           <Button
                             className="mt-2"
                             variant="destructive"
@@ -183,7 +208,9 @@ export default function Adventures() {
                               handleGuideRequestApproval({
                                 id: guideRequest._id,
                                 status: "REJECTED",
+                                message: customMessage || "Sorry!! Guide Request Rejected.",
                               });
+                              setCustomMessage('');
                             }}
                           >
                             Yes, Reject.
