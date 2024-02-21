@@ -48,8 +48,8 @@ export default function Adventures() {
     message,
   }: {
     id: string;
-      status: string;
-      message: string;
+    status: string;
+    message: string;
   }) => {
     try {
       const res = await fetch(`${API_URL}/api/guide-requests/${id}/status`, {
@@ -158,14 +158,15 @@ export default function Adventures() {
                 {guideRequest.status === "PENDING" && (
                   <>
                     <Dialog>
-                      <DialogTrigger>Approve Guide</DialogTrigger>
+                      <DialogTrigger asChild>
+                        <Button>Approve Guide</Button>
+                      </DialogTrigger>
                       <DialogContent>
                         <DialogHeader>
                           <DialogTitle>
                             Do you really want to accept this guide request?
                           </DialogTitle>
                           <DialogDescription>
-                   
                             <Button
                               className="mt-2"
                               variant="default"
@@ -173,9 +174,9 @@ export default function Adventures() {
                                 handleGuideRequestApproval({
                                   id: guideRequest._id,
                                   status: "APPROVED",
-                                  message: "Your guide request has been approved",
+                                  message:
+                                    "Your guide request has been approved",
                                 });
-                              
                               }}
                             >
                               Approve
@@ -196,11 +197,11 @@ export default function Adventures() {
                             to reject this guide request.
                           </DialogDescription>
                           <Textarea
-                              className="mt-2"
-                              placeholder="Enter custom message (optional)"
-                              value={customMessage}
-                              onChange={(e) => setCustomMessage(e.target.value)}
-                            />
+                            className="mt-2"
+                            placeholder="Enter custom message (optional)"
+                            value={customMessage}
+                            onChange={(e) => setCustomMessage(e.target.value)}
+                          />
                           <Button
                             className="mt-2"
                             variant="destructive"
@@ -208,9 +209,11 @@ export default function Adventures() {
                               handleGuideRequestApproval({
                                 id: guideRequest._id,
                                 status: "REJECTED",
-                                message: customMessage || "Sorry!! Guide Request Rejected.",
+                                message:
+                                  customMessage ||
+                                  "Sorry!! Guide Request Rejected.",
                               });
-                              setCustomMessage('');
+                              setCustomMessage("");
                             }}
                           >
                             Yes, Reject.

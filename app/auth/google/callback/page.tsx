@@ -29,6 +29,8 @@ export default function GoogleCallback() {
         localStorage.setItem("refreshToken", refreshToken);
 
         const user = await getMe(accessToken);
+        document.cookie = `accessToken=${accessToken}`;
+        document.cookie = `roles=${user.roles}`;
         dispatch(
           setUser({
             phoneNumber: user.phoneNumber,
