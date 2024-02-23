@@ -1,3 +1,4 @@
+"use client"
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { cookies } from "next/headers";
@@ -12,9 +13,11 @@ export default async function middleware(req: NextRequest) {
     "/admin/cancelled_bookings",
   ];
   const protectedRoutes = ["/guide-requests", "/profile", "/bookings"];
-
+  
   const isAuthenticated = !!cookieStore.get("accessToken");
   const roles = cookieStore.get("roles")?.value.split(",") || [];
+  // const isAuthenticated = !!localStorage.getItem("accessToken");
+  // const roles = localStorage.getItem("roles")?.split(".") || [];
 
   if (!isAuthenticated && protectedRoutes.includes(req.nextUrl.pathname)) {
     return NextResponse.redirect(new URL("/", req.nextUrl));
