@@ -25,12 +25,13 @@ export default function GoogleCallback() {
           method: "google",
         });
 
+        const user = await getMe(accessToken);
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("refreshToken", refreshToken);
 
-        const user = await getMe(accessToken);
-        document.cookie = `accessToken=${accessToken}`;
-        document.cookie = `roles=${user.roles}`;
+        document.cookie = `accessToken=${accessToken}; path=/`;
+        document.cookie = `roles=${user.roles}; path=/`;
+
         dispatch(
           setUser({
             phoneNumber: user.phoneNumber,
