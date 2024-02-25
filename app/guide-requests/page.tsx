@@ -56,6 +56,7 @@ const FormSchema = z.object({
     "NID",
     "PASSPORT",
     "COMPANY_REGISTRATION_CERTIFICATE",
+    "GUIDE_ID",
     "OTHER",
   ]),
   document: z.any().refine(
@@ -95,7 +96,7 @@ export default function PostCreate() {
       address: "",
       cover_letter: "",
       dateOfBirth: "",
-      documentTitle: "OTHER",
+      documentTitle: "GUIDE_ID",
     },
   });
 
@@ -191,7 +192,7 @@ export default function PostCreate() {
           ]);
 
           form.setValue("document", undefined);
-          form.setValue("documentTitle", "OTHER");
+          form.setValue("documentTitle", "GUIDE_ID");
         }
       } else {
         throw new Error(
@@ -390,12 +391,15 @@ export default function PostCreate() {
                           </SelectTrigger>
                           <SelectContent>
                             <SelectGroup>
-                              <SelectItem value="NID">NID</SelectItem>
-                              <SelectItem value="PASSPORT">PASSPORT</SelectItem>
-                              <SelectItem value="COMPANY_REGISTRATION_CERTIFICATE">
-                                COMPANY_REGISTRATION_CERTIFICATE
+                              <SelectItem value="GUIDE_ID">
+                                Guide ID (Required)
                               </SelectItem>
-                              <SelectItem value="OTHER">OTHER</SelectItem>
+                              <SelectItem value="NID">National ID</SelectItem>
+                              <SelectItem value="PASSPORT">Passport</SelectItem>
+                              <SelectItem value="COMPANY_REGISTRATION_CERTIFICATE">
+                                Company Registration Certificate
+                              </SelectItem>
+                              <SelectItem value="OTHER">Other</SelectItem>
                             </SelectGroup>
                           </SelectContent>
                         </Select>

@@ -55,7 +55,7 @@ export default function EnrollAdventureDialog({ id }: { id: string }) {
   useEffect(() => {
     async function getAdventures() {
       const res = await getMe(accessToken);
-      res.adventures.map((adventure: any) => {
+      res.adventures?.map((adventure: any) => {
         if (adventure._id === id) {
           setEnrollAdventure(true);
         }
